@@ -46,11 +46,7 @@ endfacet = "endfacet"
 footer = "endsolid MadeWithJohncad";
 percision = 1;
 
-#To do Thursday:
-#Finish setting up percision
-#Finish setting up 3 display angles
-#Add eco information
-#Create process plan info
+
 
 
 
@@ -156,17 +152,25 @@ while (isopen==1):
 
 
         #Round Generation
-        for k in range (-1, int(BoundryZ)+1):
+        for k in range (-1, 0):
+            for j in range (0, int(BoundryY)):
+                for i in range (0, int(BoundryX)):
+                    space[k*(BoundryY*BoundryX)+j*(BoundryX)+i]=u"\u25A1";
+        for k in range (int(BoundryZ), int(BoundryZ)+1):
             for j in range (0, int(BoundryY)):
                 for i in range (0, int(BoundryX)):
                     space[k*(BoundryY*BoundryX)+j*(BoundryX)+i]=u"\u25A1";
         data[2]=0
+
+        #For sure works for even numbers
         for k in range (0, int(BoundryZ)):
             for j in range (0, int(BoundryY)):
                 for i in range (0, int(BoundryX)):
                     if int(math.sqrt((i+.5-(math.floor(BoundryX)/2))**2+(j+.5-(math.floor(BoundryY)/2))**2)) <= (data[0]*percision-1)/2: #Rework later
                         space[(k)*(BoundryX*BoundryY)+(j)*(BoundryY)+i]=u"\u25A0";
                         data[2]=data[2]+1
+                    if int(math.sqrt((i+.5-(math.floor(BoundryX)/2))**2+(j+.5-(math.floor(BoundryY)/2))**2)) > (data[0]*percision-1)/2:
+                        space[(k)*(BoundryX*BoundryY)+(j)*(BoundryY)+i]=u"\u25A1";
 
     #Barstock deatils   
     if (mode=="Bdetails"):
@@ -218,7 +222,7 @@ while (isopen==1):
         command = input();
         
         if (command == "D" or command == "d"):
-            #Starting with generating the TOP :)
+            #Starting with generating the Front :)
             for i in range (0, int(data[0]*percision)):
                 for j in range (0, int(data[1]*percision*data[2]*percision)):
                     if space[int(data[0]*i+j)]==u"\u25A0":
@@ -335,7 +339,7 @@ while (isopen==1):
             for k in range(0, int(BoundryZ)*percision):
                 for j in range(0, int(BoundryY)*percision):
                     for i in range(0, int(BoundryX)*percision):
-                        if openl[int(k*(BoundryX*BoundryY*percision)+j*(BoundryX*percision))+i] == 1 or openr[int(k*(BoundryX*BoundryY*percision)+j*(BoundryX*percision))+i] == 1 or openf[int(k*(BoundryX*BoundryY*percision)+j*(BoundryX*percision))+i] == 1 or opena[int(k*(BoundryX*BoundryY*percision)+j*(BoundryX*percision))+i] == 1:
+                        if openl[int(k*(BoundryX*BoundryY*percision)+j*(BoundryX*percision))+i] == 1 or openr[int(k*(BoundryX*BoundryY*percision)+j*(BoundryX*percision))+i] == 1 or opent[int(k*(BoundryX*BoundryY*percision)+j*(BoundryX*percision))+i] == 1 or openb[int(k*(BoundryX*BoundryY*percision)+j*(BoundryX*percision))+i] == 1:
                             top[int(j*(BoundryX*percision))+k] = u"\u25A4"
             #Draw Front
             print("Top")
@@ -343,48 +347,25 @@ while (isopen==1):
                 for j in range(0, int(BoundryX)*percision):
                     print(top[int(i*(BoundryX*percision))+j], "" ,end = "")
                 print("")
-                
-            #Generate Front
-            for i in range(0, int(BoundryY)*percision):
-                for j in range(0, int(BoundryZ)*percision):
-                    for k in range(0, int(BoundryX)*percision):
-                        front[int(j*(BoundryZ*percision))+k] = u"\u25A1"
-                        if space[int(i*(BoundryX*percision)+j*(BoundryX*BoundryY*percision))+k] == u"\u25A0":
-                            front[int(j*(BoundryX*percision))+k] = u"\u25A0"
 
-            #Hatch
-            for i in range(0, int(BoundryZ)*percision):
-                for j in range(0, int(BoundryY)*percision):
-                    for k in range(0, int(BoundryX)*percision):
-                        if opena[int(i*(BoundryX*BoundryY*percision)+j*(BoundryX*percision))+k] == 1 or openf[int(i*(BoundryX*BoundryY*percision)+j*(BoundryX*percision))+k] == 1 or opent[int(i*(BoundryX*BoundryY*percision)+j*(BoundryX*percision))+k] == 1 or openb[int(i*(BoundryX*BoundryY*percision)+j*(BoundryX*percision))+k] == 1:
-                            front[int(j*(BoundryX*percision))+k] = u"\u25A4"
-            #Draw Front
-            print("Front Not yet functioning")
-            for i in range(0, int(BoundryZ)*percision):
-                for j in range(0, int(BoundryX)*percision):
-                    print(front[int(i*(BoundryZ*percision))+j], "" ,end = "")
-                print("")
-                
-            #Generate Right
-            for i in range(0, int(BoundryY)*percision):
-                for j in range(0, int(BoundryZ)*percision):
-                    for k in range(0, int(BoundryX)*percision):
-                        right[int(j*(BoundryX*BoundryY*percision))+k] = u"\u25A1"
-                        if space[int(i*(BoundryX*percision)+j*(BoundryX*BoundryY*percision))+k] == u"\u25A0":
-                            right[int(j*(BoundryX*percision))+k] = u"\u25A0"
 
-            #Hatch
-            for i in range(0, int(BoundryZ)*percision):
-                for j in range(0, int(BoundryY)*percision):
-                    for k in range(0, int(BoundryX)*percision):
-                        if openl[int(i*(BoundryX*BoundryY*percision)+j*(BoundryX*percision))+k] == 1 or openr[int(i*(BoundryX*BoundryY*percision)+j*(BoundryX*percision))+k] == 1 or openf[int(i*(BoundryX*BoundryY*percision)+j*(BoundryX*percision))+k] == 1 or opena[int(i*(BoundryX*BoundryY*percision)+j*(BoundryX*percision))+k] == 1:
-                            right[int(j*(BoundryX*percision))+k] = u"\u25A4"
-            #Draw Right
-            print("Front Not yet functioning")
-            for i in range(0, int(BoundryZ)*percision):
-                for j in range(0, int(BoundryX)*percision):
-                    print(right[int(i*(BoundryX*percision))+j], "" ,end = "")
-                print("")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
                             
 
                         
@@ -446,310 +427,325 @@ while (isopen==1):
 #                                opent[k*(BoundryY*BoundryX)+j*(BoundryX)+i]=1;
 #                                opens[k*(BoundryY*BoundryX)+j*(BoundryX)+i]=opens[k*(BoundryY*BoundryX)+j*(BoundryX)+i]+1
 
+            #Compress STLS and hopefuflly make it run faster
             for k in range (0, int(BoundryZ)):
                 for j in range (0,int(BoundryY)):
                     for i in range (0, int(BoundryX)):
-                        if (space[k*(BoundryY*BoundryX)+j*(BoundryX)+i] == u"\u25A0" and (space[(k-1)*(BoundryY*BoundryX)+j*(BoundryX)+i] == u"\u25A1" or k == 0)):
-                            #Triangle RealAft1
-                            theVs[0]=i/percision
-                            theVs[1]=j/percision+1/percision
-                            theVs[2]=k/percision
+                        if (space[k*(BoundryY*BoundryX)+j*(BoundryX)+i] == u"\u25A0" and (space[(k)*(BoundryY*BoundryX)+j*(BoundryX)+i-1] == u"\u25A1" or i == 0)):
+                            compressor[0]=i
+                        if (space[k*(BoundryY*BoundryX)+j*(BoundryX)+i] == u"\u25A0" and (space[(k)*(BoundryY*BoundryX)+j*(BoundryX)+i+1] == u"\u25A1" or i == BoundryX+1)):
+                            compressor[1]=i
+                        if compressor[0] != 0 and compressor[1] != 0:
+                            for l in range (j, int(BoundryY)):
+                                for m in range (compressor[0], compressor[1]):
+                                    print('hi')
 
-                            theVs[3]=i/percision+1/percision
-                            theVs[4]=j/percision
-                            theVs[5]=k/percision
+                        
+            for k in range (0, int(BoundryZ)):
+                for j in range (0,int(BoundryY)):
+                    for i in range (0, int(BoundryX)):
+                        if (space[k*(BoundryY*BoundryX)+j*(BoundryX)+i] == u"\u25A0")
+                            if (space[(k-1)*(BoundryY*BoundryX)+j*(BoundryX)+i] == u"\u25A1" or k == 0):
+                                #Triangle RealAft1
+                                theVs[0]=i/percision
+                                theVs[1]=j/percision+1/percision
+                                theVs[2]=k/percision
 
-                            theVs[6]=i/percision
-                            theVs[7]=j/percision
-                            theVs[8]=k/percision
-                            #Triangle RealAft2
-                            theVs[9]=i/percision+1/percision
-                            theVs[10]=j/percision
-                            theVs[11]=k/percision
+                                theVs[3]=i/percision+1/percision
+                                theVs[4]=j/percision
+                                theVs[5]=k/percision
 
-                            theVs[12]=i/percision
-                            theVs[13]=j/percision+1/percision
-                            theVs[14]=k/percision
+                                theVs[6]=i/percision
+                                theVs[7]=j/percision
+                                theVs[8]=k/percision
+                                #Triangle RealAft2
+                                theVs[9]=i/percision+1/percision
+                                theVs[10]=j/percision
+                                theVs[11]=k/percision
 
-                            theVs[15]=i/percision+1/percision
-                            theVs[16]=j/percision+1/percision
-                            theVs[17]=k/percision
+                                theVs[12]=i/percision
+                                theVs[13]=j/percision+1/percision
+                                theVs[14]=k/percision
+    
+                                theVs[15]=i/percision+1/percision
+                                theVs[16]=j/percision+1/percision
+                                theVs[17]=k/percision
                             
-                            point0= "vertex " + str(theVs[0]) + " " + str(theVs[1])+ " " + str(theVs[2])
-                            point1= "vertex " + str(theVs[3])+ " " + str(theVs[4])+ " " + str(theVs[5])
-                            point2= "vertex " + str(theVs[6])+ " " + str(theVs[7])+ " " + str(theVs[8])
-                            point3= "vertex " + str(theVs[9])+ " " + str(theVs[10])+ " " + str(theVs[11])
-                            point4= "vertex " + str(theVs[12])+ " " + str(theVs[13])+ " " + str(theVs[14])
-                            point5= "vertex " + str(theVs[15])+ " " + str(theVs[16])+ " " + str(theVs[17])
+                                point0= "vertex " + str(theVs[0]) + " " + str(theVs[1])+ " " + str(theVs[2])
+                                point1= "vertex " + str(theVs[3])+ " " + str(theVs[4])+ " " + str(theVs[5])
+                                point2= "vertex " + str(theVs[6])+ " " + str(theVs[7])+ " " + str(theVs[8])
+                                point3= "vertex " + str(theVs[9])+ " " + str(theVs[10])+ " " + str(theVs[11])
+                                point4= "vertex " + str(theVs[12])+ " " + str(theVs[13])+ " " + str(theVs[14])
+                                point5= "vertex " + str(theVs[15])+ " " + str(theVs[16])+ " " + str(theVs[17])
 
                                 
-                            export.write("facet normal 0 0 0" + '\n');
-                            export.write("outer loop" + '\n');                            
-                            export.write(str(point0) + '\n');
-                            export.write(str(point1) + '\n');
-                            export.write(str(point2) + '\n');
-                            export.write(eloop + '\n');
-                            export.write(endfacet + '\n');
-                            export.write("facet normal 0 0 0" + '\n');
-                            export.write("outer loop" + '\n');                            
-                            export.write(str(point3) + '\n');
-                            export.write(str(point4) + '\n');
-                            export.write(str(point5) + '\n');
-                            export.write(eloop + '\n');
-                            export.write(endfacet + '\n');
-                            export.write('\n');
+                                export.write("facet normal 0 0 0" + '\n');
+                                export.write("outer loop" + '\n');                            
+                                export.write(str(point0) + '\n');
+                                export.write(str(point1) + '\n');
+                                export.write(str(point2) + '\n');
+                                export.write(eloop + '\n');
+                                export.write(endfacet + '\n');
+                                export.write("facet normal 0 0 0" + '\n');
+                                export.write("outer loop" + '\n');                            
+                                export.write(str(point3) + '\n');
+                                export.write(str(point4) + '\n');
+                                export.write(str(point5) + '\n');
+                                export.write(eloop + '\n');
+                                export.write(endfacet + '\n');
+                                export.write('\n');
 
-                        if (space[k*(BoundryY*BoundryX)+j*(BoundryX)+i] == u"\u25A0" and (space[(k+1)*(BoundryY*BoundryX)+j*(BoundryX)+i] == u"\u25A1" or k == BoundryZ-1)):
-                            #Triangle RealFront1
-                            theVs[0]=i/percision
-                            theVs[1]=j/percision
-                            theVs[2]=k/percision+1/percision
+                            if ((space[(k+1)*(BoundryY*BoundryX)+j*(BoundryX)+i] == u"\u25A1" or k == BoundryZ-1)):
+                                #Triangle RealFront1
+                                theVs[0]=i/percision
+                                theVs[1]=j/percision
+                                theVs[2]=k/percision+1/percision
 
-                            theVs[3]=i/percision+1/percision
-                            theVs[4]=j/percision
-                            theVs[5]=k/percision+1/percision
+                                theVs[3]=i/percision+1/percision
+                                theVs[4]=j/percision
+                                theVs[5]=k/percision+1/percision
 
-                            theVs[6]=i/percision
-                            theVs[7]=j/percision+1/percision
-                            theVs[8]=k/percision+1/percision
-                            #Triangle RealFront2
-                            theVs[9]=i/percision+1/percision
-                            theVs[10]=j/percision+1/percision
-                            theVs[11]=k/percision+1/percision
+                                theVs[6]=i/percision
+                                theVs[7]=j/percision+1/percision
+                                theVs[8]=k/percision+1/percision
+                                #Triangle RealFront2
+                                theVs[9]=i/percision+1/percision
+                                theVs[10]=j/percision+1/percision
+                                theVs[11]=k/percision+1/percision
 
-                            theVs[12]=i/percision
-                            theVs[13]=j/percision+1/percision
-                            theVs[14]=k/percision+1/percision
+                                theVs[12]=i/percision
+                                theVs[13]=j/percision+1/percision
+                                theVs[14]=k/percision+1/percision
 
-                            theVs[15]=i/percision+1/percision
-                            theVs[16]=j/percision
-                            theVs[17]=k/percision+1/percision
+                                theVs[15]=i/percision+1/percision
+                                theVs[16]=j/percision
+                                theVs[17]=k/percision+1/percision
 
-                            point0= "vertex " + str(theVs[0]) + " " + str(theVs[1])+ " " + str(theVs[2])
-                            point1= "vertex " + str(theVs[3])+ " " + str(theVs[4])+ " " + str(theVs[5])
-                            point2= "vertex " + str(theVs[6])+ " " + str(theVs[7])+ " " + str(theVs[8])
-                            point3= "vertex " + str(theVs[9])+ " " + str(theVs[10])+ " " + str(theVs[11])
-                            point4= "vertex " + str(theVs[12])+ " " + str(theVs[13])+ " " + str(theVs[14])
-                            point5= "vertex " + str(theVs[15])+ " " + str(theVs[16])+ " " + str(theVs[17])
+                                point0= "vertex " + str(theVs[0]) + " " + str(theVs[1])+ " " + str(theVs[2])
+                                point1= "vertex " + str(theVs[3])+ " " + str(theVs[4])+ " " + str(theVs[5])
+                                point2= "vertex " + str(theVs[6])+ " " + str(theVs[7])+ " " + str(theVs[8])
+                                point3= "vertex " + str(theVs[9])+ " " + str(theVs[10])+ " " + str(theVs[11])
+                                point4= "vertex " + str(theVs[12])+ " " + str(theVs[13])+ " " + str(theVs[14])
+                                point5= "vertex " + str(theVs[15])+ " " + str(theVs[16])+ " " + str(theVs[17])
 
-                                
-                            export.write("facet normal 0 0 0" + '\n');
-                            export.write("outer loop" + '\n');                            
-                            export.write(str(point0) + '\n');
-                            export.write(str(point1) + '\n');
-                            export.write(str(point2) + '\n');
-                            export.write(eloop + '\n');
-                            export.write(endfacet + '\n');
-                            export.write("facet normal 0 0 0" + '\n');
-                            export.write("outer loop" + '\n');                            
-                            export.write(str(point3) + '\n');
-                            export.write(str(point4) + '\n');
-                            export.write(str(point5) + '\n');
-                            export.write(eloop + '\n');
-                            export.write(endfacet + '\n');
-                            export.write('\n');
+                                    
+                                export.write("facet normal 0 0 0" + '\n');
+                                export.write("outer loop" + '\n');                            
+                                export.write(str(point0) + '\n');
+                                export.write(str(point1) + '\n');
+                                export.write(str(point2) + '\n');
+                                export.write(eloop + '\n');
+                                export.write(endfacet + '\n');
+                                export.write("facet normal 0 0 0" + '\n');
+                                export.write("outer loop" + '\n');                            
+                                export.write(str(point3) + '\n');
+                                export.write(str(point4) + '\n');
+                                export.write(str(point5) + '\n');
+                                export.write(eloop + '\n');
+                                export.write(endfacet + '\n');
+                                export.write('\n');
 
                             
-                        if (space[k*(BoundryY*BoundryX)+j*(BoundryX)+i] == u"\u25A0" and (space[(k)*(BoundryY*BoundryX)+(j)*(BoundryX)+i-1] == u"\u25A1" or i == 0)):
-                            #Triangle L1
-                            theVs[0]=i/percision
-                            theVs[1]=j/percision
-                            theVs[2]=k/percision+1/percision
+                            if ((space[(k)*(BoundryY*BoundryX)+(j)*(BoundryX)+i-1] == u"\u25A1" or i == 0)):
+                                #Triangle L1
+                                theVs[0]=i/percision
+                                theVs[1]=j/percision
+                                theVs[2]=k/percision+1/percision
 
-                            theVs[3]=i/percision
-                            theVs[4]=j/percision+1/percision
-                            theVs[5]=k/percision+1/percision
+                                theVs[3]=i/percision
+                                theVs[4]=j/percision+1/percision
+                                theVs[5]=k/percision+1/percision
 
-                            theVs[6]=i/percision
-                            theVs[7]=j/percision
-                            theVs[8]=k/percision
-                            #Triangle L2
-                            theVs[9]=i/percision
-                            theVs[10]=j/percision
-                            theVs[11]=k/percision
+                                theVs[6]=i/percision
+                                theVs[7]=j/percision
+                                theVs[8]=k/percision
+                                #Triangle L2
+                                theVs[9]=i/percision
+                                theVs[10]=j/percision
+                                theVs[11]=k/percision
 
-                            theVs[12]=i/percision
-                            theVs[13]=j/percision+1/percision
-                            theVs[14]=k/percision+1/percision
+                                theVs[12]=i/percision
+                                theVs[13]=j/percision+1/percision
+                                theVs[14]=k/percision+1/percision
 
-                            theVs[15]=i/percision
-                            theVs[16]=j/percision+1/percision
-                            theVs[17]=k/percision
+                                theVs[15]=i/percision
+                                theVs[16]=j/percision+1/percision
+                                theVs[17]=k/percision
 
-                            point0= "vertex " + str(theVs[0]) + " " + str(theVs[1])+ " " + str(theVs[2])
-                            point1= "vertex " + str(theVs[3])+ " " + str(theVs[4])+ " " + str(theVs[5])
-                            point2= "vertex " + str(theVs[6])+ " " + str(theVs[7])+ " " + str(theVs[8])
-                            point3= "vertex " + str(theVs[9])+ " " + str(theVs[10])+ " " + str(theVs[11])
-                            point4= "vertex " + str(theVs[12])+ " " + str(theVs[13])+ " " + str(theVs[14])
-                            point5= "vertex " + str(theVs[15])+ " " + str(theVs[16])+ " " + str(theVs[17])
-
-                                
-                            export.write("facet normal 0 0 0" + '\n');
-                            export.write("outer loop" + '\n');                            
-                            export.write(str(point0) + '\n');
-                            export.write(str(point1) + '\n');
-                            export.write(str(point2) + '\n');
-                            export.write(eloop + '\n');
-                            export.write(endfacet + '\n');
-                            export.write("facet normal 0 0 0" + '\n');
-                            export.write("outer loop" + '\n');                            
-                            export.write(str(point3) + '\n');
-                            export.write(str(point4) + '\n');
-                            export.write(str(point5) + '\n');
-                            export.write(eloop + '\n');
-                            export.write(endfacet + '\n');
-                            export.write('\n');
-
-
-                        if (space[k*(BoundryY*BoundryX)+j*(BoundryX)+i] == u"\u25A0" and (space[(k)*(BoundryY*BoundryX)+(j)*(BoundryX)+i+1] == u"\u25A1"  or i == BoundryX-1)):
-                            #Triangle R1
-                            theVs[0]=i/percision+1/percision
-                            theVs[1]=j/percision
-                            theVs[2]=k/percision
-
-                            theVs[3]=i/percision+1/percision
-                            theVs[4]=j/percision+1/percision
-                            theVs[5]=k/percision+1/percision
-
-                            theVs[6]=i/percision+1/percision
-                            theVs[7]=j/percision
-                            theVs[8]=k/percision+1/percision
-                            #Triangle R2
-                            theVs[9]=i/percision+1/percision
-                            theVs[10]=j/percision+1/percision
-                            theVs[11]=k/percision
-
-                            theVs[12]=i/percision+1/percision
-                            theVs[13]=j/percision+1/percision
-                            theVs[14]=k/percision+1/percision
-
-                            theVs[15]=i/percision+1/percision
-                            theVs[16]=j/percision
-                            theVs[17]=k/percision
-
-                            point0= "vertex " + str(theVs[0]) + " " + str(theVs[1])+ " " + str(theVs[2])
-                            point1= "vertex " + str(theVs[3])+ " " + str(theVs[4])+ " " + str(theVs[5])
-                            point2= "vertex " + str(theVs[6])+ " " + str(theVs[7])+ " " + str(theVs[8])
-                            point3= "vertex " + str(theVs[9])+ " " + str(theVs[10])+ " " + str(theVs[11])
-                            point4= "vertex " + str(theVs[12])+ " " + str(theVs[13])+ " " + str(theVs[14])
-                            point5= "vertex " + str(theVs[15])+ " " + str(theVs[16])+ " " + str(theVs[17])
+                                point0= "vertex " + str(theVs[0]) + " " + str(theVs[1])+ " " + str(theVs[2])
+                                point1= "vertex " + str(theVs[3])+ " " + str(theVs[4])+ " " + str(theVs[5])
+                                point2= "vertex " + str(theVs[6])+ " " + str(theVs[7])+ " " + str(theVs[8])
+                                point3= "vertex " + str(theVs[9])+ " " + str(theVs[10])+ " " + str(theVs[11])
+                                point4= "vertex " + str(theVs[12])+ " " + str(theVs[13])+ " " + str(theVs[14])
+                                point5= "vertex " + str(theVs[15])+ " " + str(theVs[16])+ " " + str(theVs[17])
 
                                 
-                            export.write("facet normal 0 0 0" + '\n');
-                            export.write("outer loop" + '\n');                            
-                            export.write(str(point0) + '\n');
-                            export.write(str(point1) + '\n');
-                            export.write(str(point2) + '\n');
-                            export.write(eloop + '\n');
-                            export.write(endfacet + '\n');
-                            export.write("facet normal 0 0 0" + '\n');
-                            export.write("outer loop" + '\n');                            
-                            export.write(str(point3) + '\n');
-                            export.write(str(point4) + '\n');
-                            export.write(str(point5) + '\n');
-                            export.write(eloop + '\n');
-                            export.write(endfacet + '\n');
-                            export.write('\n');
+                                export.write("facet normal 0 0 0" + '\n');
+                                export.write("outer loop" + '\n');                            
+                                export.write(str(point0) + '\n');
+                                export.write(str(point1) + '\n');
+                                export.write(str(point2) + '\n');
+                                export.write(eloop + '\n');
+                                export.write(endfacet + '\n');
+                                export.write("facet normal 0 0 0" + '\n');
+                                export.write("outer loop" + '\n');                            
+                                export.write(str(point3) + '\n');
+                                export.write(str(point4) + '\n');
+                                export.write(str(point5) + '\n');
+                                export.write(eloop + '\n');
+                                export.write(endfacet + '\n');
+                                export.write('\n');
 
-                        if (space[k*(BoundryY*BoundryX)+j*(BoundryX)+i] == u"\u25A0" and (space[(k)*(BoundryY*BoundryX)+(j-1)*(BoundryX)+i] == u"\u25A1"  or j == 0)):
-                            #Triangle Top1
-                            theVs[0]=i/percision+1/percision
-                            theVs[1]=j/percision
-                            theVs[2]=k/percision+1/percision
+    
+                            if ((space[(k)*(BoundryY*BoundryX)+(j)*(BoundryX)+i+1] == u"\u25A1"  or i == BoundryX-1)):
+                                #Triangle R1
+                                theVs[0]=i/percision+1/percision
+                                theVs[1]=j/percision
+                                theVs[2]=k/percision
 
-                            theVs[3]=i/percision
-                            theVs[4]=j/percision
-                            theVs[5]=k/percision+1/percision
+                                theVs[3]=i/percision+1/percision
+                                theVs[4]=j/percision+1/percision
+                                theVs[5]=k/percision+1/percision
 
-                            theVs[6]=i/percision+1/percision
-                            theVs[7]=j/percision
-                            theVs[8]=k/percision
-                            #Triangle Top2
-                            theVs[9]=i/percision+1/percision
-                            theVs[10]=j/percision
-                            theVs[11]=k/percision
+                                theVs[6]=i/percision+1/percision
+                                theVs[7]=j/percision
+                                theVs[8]=k/percision+1/percision
+                                #Triangle R2
+                                theVs[9]=i/percision+1/percision
+                                theVs[10]=j/percision+1/percision
+                                theVs[11]=k/percision
 
-                            theVs[12]=i/percision
-                            theVs[13]=j/percision
-                            theVs[14]=k/percision+1/percision
+                                theVs[12]=i/percision+1/percision
+                                theVs[13]=j/percision+1/percision
+                                theVs[14]=k/percision+1/percision
 
-                            theVs[15]=i/percision
-                            theVs[16]=j/percision
-                            theVs[17]=k/percision
+                                theVs[15]=i/percision+1/percision
+                                theVs[16]=j/percision
+                                theVs[17]=k/percision
 
-                            point0= "vertex " + str(theVs[0]) + " " + str(theVs[1])+ " " + str(theVs[2])
-                            point1= "vertex " + str(theVs[3])+ " " + str(theVs[4])+ " " + str(theVs[5])
-                            point2= "vertex " + str(theVs[6])+ " " + str(theVs[7])+ " " + str(theVs[8])
-                            point3= "vertex " + str(theVs[9])+ " " + str(theVs[10])+ " " + str(theVs[11])
-                            point4= "vertex " + str(theVs[12])+ " " + str(theVs[13])+ " " + str(theVs[14])
-                            point5= "vertex " + str(theVs[15])+ " " + str(theVs[16])+ " " + str(theVs[17])
-
-                                
-                            export.write("facet normal 0 0 0" + '\n');
-                            export.write("outer loop" + '\n');                            
-                            export.write(str(point0) + '\n');
-                            export.write(str(point1) + '\n');
-                            export.write(str(point2) + '\n');
-                            export.write(eloop + '\n');
-                            export.write(endfacet + '\n');
-                            export.write("facet normal 0 0 0" + '\n');
-                            export.write("outer loop" + '\n');                            
-                            export.write(str(point3) + '\n');
-                            export.write(str(point4) + '\n');
-                            export.write(str(point5) + '\n');
-                            export.write(eloop + '\n');
-                            export.write(endfacet + '\n');
-                            export.write('\n');
-
-                        if (space[k*(BoundryY*BoundryX)+j*(BoundryX)+i] == u"\u25A0" and (space[(k)*(BoundryY*BoundryX)+(j+1)*(BoundryX)+i] == u"\u25A1"  or j == BoundryY-1)):
-                            #Triangle Bottom1
-                            theVs[0]=i/percision+1/percision
-                            theVs[1]=j/percision+1/percision
-                            theVs[2]=k/percision
-
-                            theVs[3]=i/percision
-                            theVs[4]=j/percision+1/percision
-                            theVs[5]=k/percision+1/percision
-
-                            theVs[6]=i/percision+1/percision
-                            theVs[7]=j/percision+1/percision
-                            theVs[8]=k/percision+1/percision
-                            #Triangle Bottom2
-                            theVs[9]=i/percision
-                            theVs[10]=j/percision+1/percision
-                            theVs[11]=k/percision
-
-                            theVs[12]=i/percision
-                            theVs[13]=j/percision+1/percision
-                            theVs[14]=k/percision+1/percision
-
-                            theVs[15]=i/percision+1/percision
-                            theVs[16]=j/percision+1/percision
-                            theVs[17]=k/percision
-
-                            point0= "vertex " + str(theVs[0]) + " " + str(theVs[1])+ " " + str(theVs[2])
-                            point1= "vertex " + str(theVs[3])+ " " + str(theVs[4])+ " " + str(theVs[5])
-                            point2= "vertex " + str(theVs[6])+ " " + str(theVs[7])+ " " + str(theVs[8])
-                            point3= "vertex " + str(theVs[9])+ " " + str(theVs[10])+ " " + str(theVs[11])
-                            point4= "vertex " + str(theVs[12])+ " " + str(theVs[13])+ " " + str(theVs[14])
-                            point5= "vertex " + str(theVs[15])+ " " + str(theVs[16])+ " " + str(theVs[17])
+                                point0= "vertex " + str(theVs[0]) + " " + str(theVs[1])+ " " + str(theVs[2])
+                                point1= "vertex " + str(theVs[3])+ " " + str(theVs[4])+ " " + str(theVs[5])
+                                point2= "vertex " + str(theVs[6])+ " " + str(theVs[7])+ " " + str(theVs[8])
+                                point3= "vertex " + str(theVs[9])+ " " + str(theVs[10])+ " " + str(theVs[11])
+                                point4= "vertex " + str(theVs[12])+ " " + str(theVs[13])+ " " + str(theVs[14])
+                                point5= "vertex " + str(theVs[15])+ " " + str(theVs[16])+ " " + str(theVs[17])
 
                                 
-                            export.write("facet normal 0 0 0" + '\n');
-                            export.write("outer loop" + '\n');                            
-                            export.write(str(point0) + '\n');
-                            export.write(str(point1) + '\n');
-                            export.write(str(point2) + '\n');
-                            export.write(eloop + '\n');
-                            export.write(endfacet + '\n');
-                            export.write("facet normal 0 0 0" + '\n');
-                            export.write("outer loop" + '\n');                            
-                            export.write(str(point3) + '\n');
-                            export.write(str(point4) + '\n');
-                            export.write(str(point5) + '\n');
-                            export.write(eloop + '\n');
-                            export.write(endfacet + '\n');
-                            export.write('\n');
+                                export.write("facet normal 0 0 0" + '\n');
+                                export.write("outer loop" + '\n');                            
+                                export.write(str(point0) + '\n');
+                                export.write(str(point1) + '\n');
+                                export.write(str(point2) + '\n');
+                                export.write(eloop + '\n');
+                                export.write(endfacet + '\n');
+                                export.write("facet normal 0 0 0" + '\n');
+                                export.write("outer loop" + '\n');                            
+                                export.write(str(point3) + '\n');
+                                export.write(str(point4) + '\n');
+                                export.write(str(point5) + '\n');
+                                export.write(eloop + '\n');
+                                export.write(endfacet + '\n');
+                                export.write('\n');
+
+                            if ((space[(k)*(BoundryY*BoundryX)+(j-1)*(BoundryX)+i] == u"\u25A1"  or j == 0)):
+                                #Triangle Top1
+                                theVs[0]=i/percision+1/percision
+                                theVs[1]=j/percision
+                                theVs[2]=k/percision+1/percision
+
+                                theVs[3]=i/percision
+                                theVs[4]=j/percision
+                                theVs[5]=k/percision+1/percision
+
+                                theVs[6]=i/percision+1/percision
+                                theVs[7]=j/percision
+                                theVs[8]=k/percision
+                                #Triangle Top2
+                                theVs[9]=i/percision+1/percision
+                                theVs[10]=j/percision
+                                theVs[11]=k/percision
+
+                                theVs[12]=i/percision
+                                theVs[13]=j/percision
+                                theVs[14]=k/percision+1/percision
+
+                                theVs[15]=i/percision
+                                theVs[16]=j/percision
+                                theVs[17]=k/percision
+
+                                point0= "vertex " + str(theVs[0]) + " " + str(theVs[1])+ " " + str(theVs[2])
+                                point1= "vertex " + str(theVs[3])+ " " + str(theVs[4])+ " " + str(theVs[5])
+                                point2= "vertex " + str(theVs[6])+ " " + str(theVs[7])+ " " + str(theVs[8])
+                                point3= "vertex " + str(theVs[9])+ " " + str(theVs[10])+ " " + str(theVs[11])
+                                point4= "vertex " + str(theVs[12])+ " " + str(theVs[13])+ " " + str(theVs[14])
+                                point5= "vertex " + str(theVs[15])+ " " + str(theVs[16])+ " " + str(theVs[17])
+
+                                
+                                export.write("facet normal 0 0 0" + '\n');
+                                export.write("outer loop" + '\n');                            
+                                export.write(str(point0) + '\n');
+                                export.write(str(point1) + '\n');
+                                export.write(str(point2) + '\n');
+                                export.write(eloop + '\n');
+                                export.write(endfacet + '\n');
+                                export.write("facet normal 0 0 0" + '\n');
+                                export.write("outer loop" + '\n');                            
+                                export.write(str(point3) + '\n');
+                                export.write(str(point4) + '\n');
+                                export.write(str(point5) + '\n');
+                                export.write(eloop + '\n');
+                                export.write(endfacet + '\n');
+                                export.write('\n');
+
+                            if ((space[(k)*(BoundryY*BoundryX)+(j+1)*(BoundryX)+i] == u"\u25A1"  or j == BoundryY-1)):
+                                #Triangle Bottom1
+                                theVs[0]=i/percision+1/percision
+                                theVs[1]=j/percision+1/percision
+                                theVs[2]=k/percision
+
+                                theVs[3]=i/percision
+                                theVs[4]=j/percision+1/percision
+                                theVs[5]=k/percision+1/percision
+
+                                theVs[6]=i/percision+1/percision
+                                theVs[7]=j/percision+1/percision
+                                theVs[8]=k/percision+1/percision
+                                #Triangle Bottom2
+                                theVs[9]=i/percision
+                                theVs[10]=j/percision+1/percision
+                                theVs[11]=k/percision
+
+                                theVs[12]=i/percision
+                                theVs[13]=j/percision+1/percision
+                                theVs[14]=k/percision+1/percision
+
+                                theVs[15]=i/percision+1/percision
+                                theVs[16]=j/percision+1/percision
+                                theVs[17]=k/percision
+
+                                point0= "vertex " + str(theVs[0]) + " " + str(theVs[1])+ " " + str(theVs[2])
+                                point1= "vertex " + str(theVs[3])+ " " + str(theVs[4])+ " " + str(theVs[5])
+                                point2= "vertex " + str(theVs[6])+ " " + str(theVs[7])+ " " + str(theVs[8])
+                                point3= "vertex " + str(theVs[9])+ " " + str(theVs[10])+ " " + str(theVs[11])
+                                point4= "vertex " + str(theVs[12])+ " " + str(theVs[13])+ " " + str(theVs[14])
+                                point5= "vertex " + str(theVs[15])+ " " + str(theVs[16])+ " " + str(theVs[17])
+
+                                
+                                export.write("facet normal 0 0 0" + '\n');
+                                export.write("outer loop" + '\n');                            
+                                export.write(str(point0) + '\n');
+                                export.write(str(point1) + '\n');
+                                export.write(str(point2) + '\n');
+                                export.write(eloop + '\n');
+                                export.write(endfacet + '\n');
+                                export.write("facet normal 0 0 0" + '\n');
+                                export.write("outer loop" + '\n');                            
+                                export.write(str(point3) + '\n');
+                                export.write(str(point4) + '\n');
+                                export.write(str(point5) + '\n');
+                                export.write(eloop + '\n');
+                                export.write(endfacet + '\n');
+                                export.write('\n');
 
 
                             
