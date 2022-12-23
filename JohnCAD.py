@@ -451,29 +451,29 @@ while (isopen==1):
                     for i in range (0, int(BoundryX)):
                         if (space[k*(BoundryY*BoundryX)+j*(BoundryX)+i] == u"\u25A0" and (space[(k-1)*(BoundryY*BoundryX)+j*(BoundryX)+i] == u"\u25A1" or k == 0)):
                             #Triangle RealAft1
-                            theVs[0]=i
-                            theVs[1]=j+1
-                            theVs[2]=k
+                            theVs[0]=i/percision
+                            theVs[1]=j/percision+1/percision
+                            theVs[2]=k/percision
 
-                            theVs[3]=i+1
-                            theVs[4]=j
-                            theVs[5]=k
+                            theVs[3]=i/percision+1/percision
+                            theVs[4]=j/percision
+                            theVs[5]=k/percision
 
-                            theVs[6]=i
-                            theVs[7]=j
-                            theVs[8]=k
+                            theVs[6]=i/percision
+                            theVs[7]=j/percision
+                            theVs[8]=k/percision
                             #Triangle RealAft2
-                            theVs[9]=i+1
-                            theVs[10]=j
-                            theVs[11]=k
+                            theVs[9]=i/percision+1/percision
+                            theVs[10]=j/percision
+                            theVs[11]=k/percision
 
-                            theVs[12]=i
-                            theVs[13]=j+1
-                            theVs[14]=k
+                            theVs[12]=i/percision
+                            theVs[13]=j/percision+1/percision
+                            theVs[14]=k/percision
 
-                            theVs[15]=i+1
-                            theVs[16]=j+1
-                            theVs[17]=k
+                            theVs[15]=i/percision+1/percision
+                            theVs[16]=j/percision+1/percision
+                            theVs[17]=k/percision
                             
                             point0= "vertex " + str(theVs[0]) + " " + str(theVs[1])+ " " + str(theVs[2])
                             point1= "vertex " + str(theVs[3])+ " " + str(theVs[4])+ " " + str(theVs[5])
@@ -501,29 +501,29 @@ while (isopen==1):
 
                         if (space[k*(BoundryY*BoundryX)+j*(BoundryX)+i] == u"\u25A0" and (space[(k+1)*(BoundryY*BoundryX)+j*(BoundryX)+i] == u"\u25A1" or k == BoundryZ-1)):
                             #Triangle RealFront1
-                            theVs[0]=i
-                            theVs[1]=j
-                            theVs[2]=k+1
+                            theVs[0]=i/percision
+                            theVs[1]=j/percision
+                            theVs[2]=k/percision+1/percision
 
-                            theVs[3]=i+1
-                            theVs[4]=j
-                            theVs[5]=k+1
+                            theVs[3]=i/percision+1/percision
+                            theVs[4]=j/percision
+                            theVs[5]=k/percision+1/percision
 
-                            theVs[6]=i
-                            theVs[7]=j+1
-                            theVs[8]=k+1
+                            theVs[6]=i/percision
+                            theVs[7]=j/percision+1/percision
+                            theVs[8]=k/percision+1/percision
                             #Triangle RealFront2
-                            theVs[9]=i+1
-                            theVs[10]=j+1
-                            theVs[11]=k+1
+                            theVs[9]=i/percision+1/percision
+                            theVs[10]=j/percision+1/percision
+                            theVs[11]=k/percision+1/percision
 
-                            theVs[12]=i
-                            theVs[13]=j+1
-                            theVs[14]=k+1
+                            theVs[12]=i/percision
+                            theVs[13]=j/percision+1/percision
+                            theVs[14]=k/percision+1/percision
 
-                            theVs[15]=i+1
-                            theVs[16]=j
-                            theVs[17]=k+1
+                            theVs[15]=i/percision+1/percision
+                            theVs[16]=j/percision
+                            theVs[17]=k/percision+1/percision
 
                             point0= "vertex " + str(theVs[0]) + " " + str(theVs[1])+ " " + str(theVs[2])
                             point1= "vertex " + str(theVs[3])+ " " + str(theVs[4])+ " " + str(theVs[5])
@@ -552,29 +552,29 @@ while (isopen==1):
                             
                         if (space[k*(BoundryY*BoundryX)+j*(BoundryX)+i] == u"\u25A0" and (space[(k)*(BoundryY*BoundryX)+(j)*(BoundryX)+i-1] == u"\u25A1" or i == 0)):
                             #Triangle L1
-                            theVs[0]=i
-                            theVs[1]=j
-                            theVs[2]=k+1
+                            theVs[0]=i/percision
+                            theVs[1]=j/percision
+                            theVs[2]=k/percision+1/percision
 
-                            theVs[3]=i
-                            theVs[4]=j+1
-                            theVs[5]=k+1
+                            theVs[3]=i/percision
+                            theVs[4]=j/percision+1/percision
+                            theVs[5]=k/percision+1/percision
 
-                            theVs[6]=i
-                            theVs[7]=j
-                            theVs[8]=k
+                            theVs[6]=i/percision
+                            theVs[7]=j/percision
+                            theVs[8]=k/percision
                             #Triangle L2
-                            theVs[9]=i
-                            theVs[10]=j
-                            theVs[11]=k
+                            theVs[9]=i/percision
+                            theVs[10]=j/percision
+                            theVs[11]=k/percision
 
-                            theVs[12]=i
-                            theVs[13]=j+1
-                            theVs[14]=k+1
+                            theVs[12]=i/percision
+                            theVs[13]=j/percision+1/percision
+                            theVs[14]=k/percision+1/percision
 
-                            theVs[15]=i
-                            theVs[16]=j+1
-                            theVs[17]=k
+                            theVs[15]=i/percision
+                            theVs[16]=j/percision+1/percision
+                            theVs[17]=k/percision
 
                             point0= "vertex " + str(theVs[0]) + " " + str(theVs[1])+ " " + str(theVs[2])
                             point1= "vertex " + str(theVs[3])+ " " + str(theVs[4])+ " " + str(theVs[5])
@@ -603,29 +603,29 @@ while (isopen==1):
 
                         if (space[k*(BoundryY*BoundryX)+j*(BoundryX)+i] == u"\u25A0" and (space[(k)*(BoundryY*BoundryX)+(j)*(BoundryX)+i+1] == u"\u25A1"  or i == BoundryX-1)):
                             #Triangle R1
-                            theVs[0]=i+1
-                            theVs[1]=j
-                            theVs[2]=k
+                            theVs[0]=i/percision+1/percision
+                            theVs[1]=j/percision
+                            theVs[2]=k/percision
 
-                            theVs[3]=i+1
-                            theVs[4]=j+1
-                            theVs[5]=k+1
+                            theVs[3]=i/percision+1/percision
+                            theVs[4]=j/percision+1/percision
+                            theVs[5]=k/percision+1/percision
 
-                            theVs[6]=i+1
-                            theVs[7]=j
-                            theVs[8]=k+1
+                            theVs[6]=i/percision+1/percision
+                            theVs[7]=j/percision
+                            theVs[8]=k/percision+1/percision
                             #Triangle R2
-                            theVs[9]=i+1
-                            theVs[10]=j+1
-                            theVs[11]=k
+                            theVs[9]=i/percision+1/percision
+                            theVs[10]=j/percision+1/percision
+                            theVs[11]=k/percision
 
-                            theVs[12]=i+1
-                            theVs[13]=j+1
-                            theVs[14]=k+1
+                            theVs[12]=i/percision+1/percision
+                            theVs[13]=j/percision+1/percision
+                            theVs[14]=k/percision+1/percision
 
-                            theVs[15]=i+1
-                            theVs[16]=j
-                            theVs[17]=k
+                            theVs[15]=i/percision+1/percision
+                            theVs[16]=j/percision
+                            theVs[17]=k/percision
 
                             point0= "vertex " + str(theVs[0]) + " " + str(theVs[1])+ " " + str(theVs[2])
                             point1= "vertex " + str(theVs[3])+ " " + str(theVs[4])+ " " + str(theVs[5])
@@ -653,29 +653,29 @@ while (isopen==1):
 
                         if (space[k*(BoundryY*BoundryX)+j*(BoundryX)+i] == u"\u25A0" and (space[(k)*(BoundryY*BoundryX)+(j-1)*(BoundryX)+i] == u"\u25A1"  or j == 0)):
                             #Triangle Top1
-                            theVs[0]=i+1
-                            theVs[1]=j
-                            theVs[2]=k+1
+                            theVs[0]=i/percision+1/percision
+                            theVs[1]=j/percision
+                            theVs[2]=k/percision+1/percision
 
-                            theVs[3]=i
-                            theVs[4]=j
-                            theVs[5]=k+1
+                            theVs[3]=i/percision
+                            theVs[4]=j/percision
+                            theVs[5]=k/percision+1/percision
 
-                            theVs[6]=i+1
-                            theVs[7]=j
-                            theVs[8]=k
+                            theVs[6]=i/percision+1/percision
+                            theVs[7]=j/percision
+                            theVs[8]=k/percision
                             #Triangle Top2
-                            theVs[9]=i+1
-                            theVs[10]=j
-                            theVs[11]=k
+                            theVs[9]=i/percision+1/percision
+                            theVs[10]=j/percision
+                            theVs[11]=k/percision
 
-                            theVs[12]=i
-                            theVs[13]=j
-                            theVs[14]=k+1
+                            theVs[12]=i/percision
+                            theVs[13]=j/percision
+                            theVs[14]=k/percision+1/percision
 
-                            theVs[15]=i
-                            theVs[16]=j
-                            theVs[17]=k
+                            theVs[15]=i/percision
+                            theVs[16]=j/percision
+                            theVs[17]=k/percision
 
                             point0= "vertex " + str(theVs[0]) + " " + str(theVs[1])+ " " + str(theVs[2])
                             point1= "vertex " + str(theVs[3])+ " " + str(theVs[4])+ " " + str(theVs[5])
@@ -703,29 +703,29 @@ while (isopen==1):
 
                         if (space[k*(BoundryY*BoundryX)+j*(BoundryX)+i] == u"\u25A0" and (space[(k)*(BoundryY*BoundryX)+(j+1)*(BoundryX)+i] == u"\u25A1"  or j == BoundryY-1)):
                             #Triangle Bottom1
-                            theVs[0]=i+1
-                            theVs[1]=j+1
-                            theVs[2]=k
+                            theVs[0]=i/percision+1/percision
+                            theVs[1]=j/percision+1/percision
+                            theVs[2]=k/percision
 
-                            theVs[3]=i
-                            theVs[4]=j+1
-                            theVs[5]=k+1
+                            theVs[3]=i/percision
+                            theVs[4]=j/percision+1/percision
+                            theVs[5]=k/percision+1/percision
 
-                            theVs[6]=i+1
-                            theVs[7]=j+1
-                            theVs[8]=k+1
+                            theVs[6]=i/percision+1/percision
+                            theVs[7]=j/percision+1/percision
+                            theVs[8]=k/percision+1/percision
                             #Triangle Bottom2
-                            theVs[9]=i
-                            theVs[10]=j+1
-                            theVs[11]=k
+                            theVs[9]=i/percision
+                            theVs[10]=j/percision+1/percision
+                            theVs[11]=k/percision
 
-                            theVs[12]=i
-                            theVs[13]=j+1
-                            theVs[14]=k+1
+                            theVs[12]=i/percision
+                            theVs[13]=j/percision+1/percision
+                            theVs[14]=k/percision+1/percision
 
-                            theVs[15]=i+1
-                            theVs[16]=j+1
-                            theVs[17]=k
+                            theVs[15]=i/percision+1/percision
+                            theVs[16]=j/percision+1/percision
+                            theVs[17]=k/percision
 
                             point0= "vertex " + str(theVs[0]) + " " + str(theVs[1])+ " " + str(theVs[2])
                             point1= "vertex " + str(theVs[3])+ " " + str(theVs[4])+ " " + str(theVs[5])
