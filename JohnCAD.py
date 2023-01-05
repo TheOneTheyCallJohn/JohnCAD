@@ -133,8 +133,8 @@ while (isopen==1):
             data[0] = 1
             if (command > 0):
                 data[0] = command;
-                BoundryX=command*percision;
-                BoundryY=command*percision;
+                boundaryX=command*percision;
+                boundaryY=command*percision;
                 selection=1;
         while (selection==1):
             print("Enter Stock Length")
@@ -143,7 +143,7 @@ while (isopen==1):
             data[1] = 1;
             if (command > 0):
                 data[1] = command;
-                BoundryZ = command*percision;
+                boundaryZ = command*percision;
                 mode = "StockOperations";
                 selection=0;
         print("Diameter, Length");
@@ -154,24 +154,24 @@ while (isopen==1):
 
         #Round Generation
         for k in range (-1, 0):
-            for j in range (0, int(BoundryY)):
-                for i in range (0, int(BoundryX)):
-                    space[k*(BoundryY*BoundryX)+j*(BoundryX)+i]=u"\u25A1";
-        for k in range (int(BoundryZ), int(BoundryZ)+1):
-            for j in range (0, int(BoundryY)):
-                for i in range (0, int(BoundryX)):
-                    space[k*(BoundryY*BoundryX)+j*(BoundryX)+i]=u"\u25A1";
+            for j in range (0, int(boundaryY)):
+                for i in range (0, int(boundaryX)):
+                    space[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=u"\u25A1";
+        for k in range (int(boundaryZ), int(boundaryZ)+1):
+            for j in range (0, int(boundaryY)):
+                for i in range (0, int(boundaryX)):
+                    space[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=u"\u25A1";
         data[2]=0
 
         #For sure works for even numbers
-        for k in range (0, int(BoundryZ)):
-            for j in range (0, int(BoundryY)):
-                for i in range (0, int(BoundryX)):
-                    if int(math.sqrt((i+.5-(math.floor(BoundryX)/2))**2+(j+.5-(math.floor(BoundryY)/2))**2)) <= (data[0]*percision-1)/2: #Rework later
-                        space[(k)*(BoundryX*BoundryY)+(j)*(BoundryY)+i]=u"\u25A0";
+        for k in range (0, int(boundaryZ)):
+            for j in range (0, int(boundaryY)):
+                for i in range (0, int(boundaryX)):
+                    if int(math.sqrt((i+.5-(math.floor(boundaryX)/2))**2+(j+.5-(math.floor(boundaryY)/2))**2)) <= (data[0]*percision-1)/2: #Rework later
+                        space[(k)*(boundaryX*boundaryY)+(j)*(boundaryY)+i]=u"\u25A0";
                         data[2]=data[2]+1
-                    if int(math.sqrt((i+.5-(math.floor(BoundryX)/2))**2+(j+.5-(math.floor(BoundryY)/2))**2)) > (data[0]*percision-1)/2:
-                        space[(k)*(BoundryX*BoundryY)+(j)*(BoundryY)+i]=u"\u25A1";
+                    if int(math.sqrt((i+.5-(math.floor(boundaryX)/2))**2+(j+.5-(math.floor(boundaryY)/2))**2)) > (data[0]*percision-1)/2:
+                        space[(k)*(boundaryX*boundaryY)+(j)*(boundaryY)+i]=u"\u25A1";
 
     #Barstock deatils   
     if (mode=="Bdetails"):
@@ -182,7 +182,7 @@ while (isopen==1):
             data[0] = 1
             if (command > 0):
                 data[0] = command;
-                BoundryX=command;
+                boundaryX=command;
                 selection=1;
         while (selection==1):
             print("Enter Stock Height Y")
@@ -191,7 +191,7 @@ while (isopen==1):
             data[1] = 1;
             if (command > 0):
                 data[1] = command;
-                BoundryY = command;
+                boundaryY = command;
                 mode = "StockOperations";
                 selection=2;
         while (selection==2):
@@ -201,13 +201,13 @@ while (isopen==1):
             data[1] = 1;
             if (command > 0):
                 data[1] = command;
-                BoundryZ = command;
+                boundaryZ = command;
                 mode = "StockOperations";
                 selection=0;
-        for k in range (-1, int(BoundryZ)+1*percision):
-            for j in range (0, int(BoundryY)*percision):
-                for i in range (0, int(BoundryX)*percision):
-                    space[k*(BoundryY*BoundryX)+j*(BoundryX)+i]=u"\u25A0";
+        for k in range (-1, int(boundaryZ)+1*percision):
+            for j in range (0, int(boundaryY)*percision):
+                for i in range (0, int(boundaryX)*percision):
+                    space[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=u"\u25A0";
 
 
     #Sheetmetal operations
@@ -298,86 +298,86 @@ while (isopen==1):
         if (command == "D" or command == "d"):
 
             #Detect Openspaces around (Rework generation and delete this part)
-#            for k in range(0, int(BoundryZ)*percision):
-#                for j in range(0, int(BoundryY)*percision):
-#                    for i in range(0, int(BoundryX)*percision):
-#                        openl[k*(BoundryY*BoundryX)+j*(BoundryX)+i]=0;
-#                        openr[k*(BoundryY*BoundryX)+j*(BoundryX)+i]=0;
-#                        openb[k*(BoundryY*BoundryX)+j*(BoundryX)+i]=0;
-#                        opent[k*(BoundryY*BoundryX)+j*(BoundryX)+i]=0;
-#                        opena[k*(BoundryY*BoundryX)+j*(BoundryX)+i]=0;
-#                        openf[k*(BoundryY*BoundryX)+j*(BoundryX)+i]=0;
+#            for k in range(0, int(boundaryZ)*percision):
+#                for j in range(0, int(boundaryY)*percision):
+#                    for i in range(0, int(boundaryX)*percision):
+#                        openl[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=0;
+#                        openr[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=0;
+#                        openb[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=0;
+#                        opent[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=0;
+#                        opena[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=0;
+#                        openf[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=0;
 
                             
-#                        if (space[k*(BoundryY*BoundryX)+j*(BoundryX)+i] == u"\u25A0"):
-#                            if (space[k*(BoundryY*BoundryX)+j*(BoundryX)+(i-1)]) == u"\u25A1" or i == 0:
-#                                openl[k*(BoundryY*BoundryX)+j*(BoundryX)+i]=1;
-#                            if (space[k*(BoundryY*BoundryX)+j*(BoundryX)+(i+1)]) == u"\u25A1" or i == BoundryX-1:
-#                                openr[k*(BoundryY*BoundryX)+j*(BoundryX)+i]=1;
+#                        if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A0"):
+#                            if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+(i-1)]) == u"\u25A1" or i == 0:
+#                                openl[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=1;
+#                            if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+(i+1)]) == u"\u25A1" or i == boundaryX-1:
+#                                openr[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=1;
 #                                
-#                            if (space[k*(BoundryY*BoundryX)+(j-1)*(BoundryX)+i]) == u"\u25A1" or j == 0:
-#                                openb[k*(BoundryY*BoundryX)+j*(BoundryX)+i]=1;
-#                            if (space[k*(BoundryY*BoundryX)+(j+1)*(BoundryX)+i]) == u"\u25A1" or j == BoundryY-1:
-#                                opent[k*(BoundryY*BoundryX)+j*(BoundryX)+i]=1;
+#                            if (space[k*(boundaryY*boundaryX)+(j-1)*(boundaryX)+i]) == u"\u25A1" or j == 0:
+#                                openb[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=1;
+#                            if (space[k*(boundaryY*boundaryX)+(j+1)*(boundaryX)+i]) == u"\u25A1" or j == boundaryY-1:
+#                                opent[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=1;
 #                                
-#                            if (space[(k-1)*(BoundryY*BoundryX)+j*(BoundryX)+i]) == u"\u25A1" or k == 0:
-#                                openf[k*(BoundryY*BoundryX)+j*(BoundryX)+i]=1;
-#                            if (space[(k+1)*(BoundryY*BoundryX)+j*(BoundryX)+i]) == u"\u25A1" or k == BoundryZ-1:
-#                                opena[k*(BoundryY*BoundryX)+j*(BoundryX)+i]=1;
+#                            if (space[(k-1)*(boundaryY*boundaryX)+j*(boundaryX)+i]) == u"\u25A1" or k == 0:
+#                                openf[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=1;
+#                            if (space[(k+1)*(boundaryY*boundaryX)+j*(boundaryX)+i]) == u"\u25A1" or k == boundaryZ-1:
+#                                opena[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=1;
 
 
 
 
-            for k in range(0, int(BoundryZ)*percision):
-                for j in range(0, int(BoundryY)*percision):
-                    for i in range(0, int(BoundryX)*percision):
-                        front[int(i*(BoundryX*percision))+j]=u"\u25A1"
-                        top[int(k*(BoundryX*percision))+i] = u"\u25A1"
-                        right[int(k*(BoundryX*percision))+j] = u"\u25A1"
+            for k in range(0, int(boundaryZ)*percision):
+                for j in range(0, int(boundaryY)*percision):
+                    for i in range(0, int(boundaryX)*percision):
+                        front[int(i*(boundaryX*percision))+j]=u"\u25A1"
+                        top[int(k*(boundaryX*percision))+i] = u"\u25A1"
+                        right[int(k*(boundaryX*percision))+j] = u"\u25A1"
 
 
 
             #Generate Top
-            for k in range(0, int(BoundryZ)*percision):
-                for j in range(0, int(BoundryY)*percision):
-                    for i in range(0, int(BoundryX)*percision):
-                        if space[int(k*(BoundryX*BoundryY*percision)+j*(BoundryX*percision))+i] == u"\u25A0":
-                            top[int(k*(BoundryX*percision))+i] = u"\u25A0"
-                        if top[int(k*(BoundryX*percision))+i] != u"\u25A0" and space[int(k*(BoundryX*BoundryY*percision)+j*(BoundryX*percision))+i] == u"\u25A1":
-                            top[int(k*(BoundryX*percision))+i] = u"\u25A1"
+            for k in range(0, int(boundaryZ)*percision):
+                for j in range(0, int(boundaryY)*percision):
+                    for i in range(0, int(boundaryX)*percision):
+                        if space[int(k*(boundaryX*boundaryY*percision)+j*(boundaryX*percision))+i] == u"\u25A0":
+                            top[int(k*(boundaryX*percision))+i] = u"\u25A0"
+                        if top[int(k*(boundaryX*percision))+i] != u"\u25A0" and space[int(k*(boundaryX*boundaryY*percision)+j*(boundaryX*percision))+i] == u"\u25A1":
+                            top[int(k*(boundaryX*percision))+i] = u"\u25A1"
             #Draw Top
             print("Top")
-            for i in range(0, int(BoundryZ)*percision):
-                for j in range(0, int(BoundryX)*percision):
-                    print(top[int(i*(BoundryY*percision))+j], "" ,end = "")
+            for i in range(0, int(boundaryZ)*percision):
+                for j in range(0, int(boundaryX)*percision):
+                    print(top[int(i*(boundaryY*percision))+j], "" ,end = "")
                 print("")
 
             #Generate Front
-            for k in range(0, int(BoundryZ)*percision):
-                for j in range(0, int(BoundryY)*percision):
-                    for i in range(0, int(BoundryX)*percision):
-                        if space[int(k*(BoundryX*BoundryY*percision)+j*(BoundryX*percision))+i] == u"\u25A0":
-                            front[int(j*(BoundryX*percision))+i] = u"\u25A0"
-                        if space[int(k*(BoundryX*BoundryY*percision)+j*(BoundryX*percision))+i] == u"\u25A1":
-                            front[int(j*(BoundryX*percision))+i] = u"\u25A1"
+            for k in range(0, int(boundaryZ)*percision):
+                for j in range(0, int(boundaryY)*percision):
+                    for i in range(0, int(boundaryX)*percision):
+                        if space[int(k*(boundaryX*boundaryY*percision)+j*(boundaryX*percision))+i] == u"\u25A0":
+                            front[int(j*(boundaryX*percision))+i] = u"\u25A0"
+                        if space[int(k*(boundaryX*boundaryY*percision)+j*(boundaryX*percision))+i] == u"\u25A1":
+                            front[int(j*(boundaryX*percision))+i] = u"\u25A1"
                             
                         #Draw hatch if on the outside
-            #for k in range(0, int(BoundryZ)*percision):
-                #for j in range(0, int(BoundryY)*percision):
-                    #for i in range(0, int(BoundryX)*percision):
-                        #if openl[int(k*(BoundryX*BoundryY*percision)+j*(BoundryX*percision))+i] == 1 or openr[int(k*(BoundryX*BoundryY*percision)+j*(BoundryX*percision))+i] == 1 or opent[int(k*(BoundryX*BoundryY*percision)+j*(BoundryX*percision))+i] == 1 or openb[int(k*(BoundryX*BoundryY*percision)+j*(BoundryX*percision))+i] == 1:
-                            #front[int(j*(BoundryX*percision))+k] = u"\u25A4"
+            #for k in range(0, int(boundaryZ)*percision):
+                #for j in range(0, int(boundaryY)*percision):
+                    #for i in range(0, int(boundaryX)*percision):
+                        #if openl[int(k*(boundaryX*boundaryY*percision)+j*(boundaryX*percision))+i] == 1 or openr[int(k*(boundaryX*boundaryY*percision)+j*(boundaryX*percision))+i] == 1 or opent[int(k*(boundaryX*boundaryY*percision)+j*(boundaryX*percision))+i] == 1 or openb[int(k*(boundaryX*boundaryY*percision)+j*(boundaryX*percision))+i] == 1:
+                            #front[int(j*(boundaryX*percision))+k] = u"\u25A4"
 
 
 
             #Generate Right
-            for k in range(0, int(BoundryZ)*percision):
-                for j in range(0, int(BoundryY)*percision):
-                    for i in range(0, int(BoundryX)*percision):
-                        if space[int(k*(BoundryX*BoundryY*percision)+j*(BoundryX*percision))+i] == u"\u25A0":
-                            right[int(k*(BoundryX*percision))+j] = u"\u25A0"
-                        if right[int(k*(BoundryX*percision))+j] != u"\u25A0" and space[int(k*(BoundryX*BoundryY*percision)+j*(BoundryX*percision))+i] == u"\u25A1":
-                            right[int(k*(BoundryX*percision))+j] = u"\u25A1"
+            for k in range(0, int(boundaryZ)*percision):
+                for j in range(0, int(boundaryY)*percision):
+                    for i in range(0, int(boundaryX)*percision):
+                        if space[int(k*(boundaryX*boundaryY*percision)+j*(boundaryX*percision))+i] == u"\u25A0":
+                            right[int(k*(boundaryX*percision))+j] = u"\u25A0"
+                        if right[int(k*(boundaryX*percision))+j] != u"\u25A0" and space[int(k*(boundaryX*boundaryY*percision)+j*(boundaryX*percision))+i] == u"\u25A1":
+                            right[int(k*(boundaryX*percision))+j] = u"\u25A1"
 
 
                             
@@ -385,19 +385,19 @@ while (isopen==1):
 
 
             print("Front", "                   ", "Right")
-            for i in range(0, int(BoundryY)*percision):
-                for j in range(0, int(BoundryX)*percision):
-                    print(front[int(i*(BoundryX*percision))+j], "" ,end = "")
+            for i in range(0, int(boundaryY)*percision):
+                for j in range(0, int(boundaryX)*percision):
+                    print(front[int(i*(boundaryX*percision))+j], "" ,end = "")
                 print(" ",end = "")
-                for k in range(0, int(BoundryZ)*percision):
-                    print(right[int(k*(BoundryY*percision))+i], "" ,end = "")
+                for k in range(0, int(boundaryZ)*percision):
+                    print(right[int(k*(boundaryY*percision))+i], "" ,end = "")
                 print("")
 
             
 #            print("Front")
-#            for i in range(0, int(BoundryY)*percision):
-#                for j in range(0, int(BoundryX)*percision):
-#                    print(front[int(i*(BoundryX*percision))+j], "" ,end = "")
+#            for i in range(0, int(boundaryY)*percision):
+#                for j in range(0, int(boundaryX)*percision):
+#                    print(front[int(i*(boundaryX*percision))+j], "" ,end = "")
 #                print("")
 
 
@@ -405,23 +405,23 @@ while (isopen==1):
 
             #Draw Right
 #            print("Right")
-#            for i in range(0, int(BoundryX)*percision):
-#                for j in range(0, int(BoundryZ)*percision):
-#                    print(right[int(j*(BoundryY*percision))+i], "" ,end = "")
+#            for i in range(0, int(boundaryX)*percision):
+#                for j in range(0, int(boundaryZ)*percision):
+#                    print(right[int(j*(boundaryY*percision))+i], "" ,end = "")
 #                print("")
                             
 
                         
         #Full Layered Display
         if (command == "H" or command == "h"):
-            for k in range(0, int(BoundryZ)):
+            for k in range(0, int(boundaryZ)):
                 print("");
                 print("Layer ", k+1);
-                for j in range(0, int(BoundryY)):
-                    for i in range(0, int(BoundryX)):
-                        #space[   int(k*(BoundryX*BoundryY)+j*(BoundryX))+i] = int(k*(BoundryX*BoundryY)+j*(BoundryX)+i)
-                        #space[   int(i*(BoundryX*BoundryY)+j*(BoundryX))+k] =int(math.sqrt((k-((data[0]+2)/2-.5))**2+(j-((data[0]+2)/2-.5))**2))
-                        print(space[   int(k*(BoundryX*BoundryY)+(BoundryY-1-j)*(BoundryX))+i     ], "" ,end = ""); #insert BoundryY-1- before j to swap y axis
+                for j in range(0, int(boundaryY)):
+                    for i in range(0, int(boundaryX)):
+                        #space[   int(k*(boundaryX*boundaryY)+j*(boundaryX))+i] = int(k*(boundaryX*boundaryY)+j*(boundaryX)+i)
+                        #space[   int(i*(boundaryX*boundaryY)+j*(boundaryX))+k] =int(math.sqrt((k-((data[0]+2)/2-.5))**2+(j-((data[0]+2)/2-.5))**2))
+                        print(space[   int(k*(boundaryX*boundaryY)+(boundaryY-1-j)*(boundaryX))+i     ], "" ,end = ""); #insert boundaryY-1- before j to swap y axis
                     print("");
                 
                     
@@ -432,68 +432,74 @@ while (isopen==1):
             export = open(exportname, 'w');
             export.write(header + '\n');
             #Identify which blocks are adjacent to open space (Delete soon)
-            for k in range (0, int(BoundryZ)):
-                for j in range (0,int(BoundryY)):
-                    for i in range (0, int(BoundryX)):
-                        stlprep[k*(BoundryY*BoundryX)+j*(BoundryX)+i] = space[k*(BoundryY*BoundryX)+j*(BoundryX)+i];
-                        openl[k*(BoundryY*BoundryX)+j*(BoundryX)+i]=0;
-                        openr[k*(BoundryY*BoundryX)+j*(BoundryX)+i]=0;
-                        opena[k*(BoundryY*BoundryX)+j*(BoundryX)+i]=0;
-                        openf[k*(BoundryY*BoundryX)+j*(BoundryX)+i]=0;
-                        openb[k*(BoundryY*BoundryX)+j*(BoundryX)+i]=0;
-                        opent[k*(BoundryY*BoundryX)+j*(BoundryX)+i]=0;
-                        opens[k*(BoundryY*BoundryX)+j*(BoundryX)+i]=0;
+            for k in range (0, int(boundaryZ)):
+                for j in range (0,int(boundaryY)):
+                    for i in range (0, int(boundaryX)):
+                        stlprep[k*(boundaryY*boundaryX)+j*(boundaryX)+i] = space[k*(boundaryY*boundaryX)+j*(boundaryX)+i];
+                        openl[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=0;
+                        openr[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=0;
+                        opena[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=0;
+                        openf[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=0;
+                        openb[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=0;
+                        opent[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=0;
+                        opens[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=0;
                         
                         
-            #for k in range (0, int(BoundryZ)):
-            #    for j in range (0,int(BoundryY)):
-            #        for i in range (0, int(BoundryX)):
-            #            stlprep[k*(BoundryY*BoundryX)+j*(BoundryX)+i] = space[k*(BoundryY*BoundryX)+j*(BoundryX)+i];
-            #            if (space[k*(BoundryY*BoundryX)+j*(BoundryX)+i] == u"\u25A0"):
+            #for k in range (0, int(boundaryZ)):
+            #    for j in range (0,int(boundaryY)):
+            #        for i in range (0, int(boundaryX)):
+            #            stlprep[k*(boundaryY*boundaryX)+j*(boundaryX)+i] = space[k*(boundaryY*boundaryX)+j*(boundaryX)+i];
+            #            if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A0"):
 
-#                            if (space[k*(BoundryY*BoundryX)+j*(BoundryX)+(i-1)]) == u"\u25A1":
-#                                openl[k*(BoundryY*BoundryX)+j*(BoundryX)+i]=1;
-#                                opens[k*(BoundryY*BoundryX)+j*(BoundryX)+i]=opens[k*(BoundryY*BoundryX)+j*(BoundryX)+i]+1
-#                            if (space[k*(BoundryY*BoundryX)+j*(BoundryX)+(i+1)]) == u"\u25A1":
-#                                openr[k*(BoundryY*BoundryX)+j*(BoundryX)+i]=1;
-#                                opens[k*(BoundryY*BoundryX)+j*(BoundryX)+i]=opens[k*(BoundryY*BoundryX)+j*(BoundryX)+i]+1
-#                            if (space[k*(BoundryY*BoundryX)+(j-1)*(BoundryX)+i]) == u"\u25A1":
-#                                opena[k*(BoundryY*BoundryX)+j*(BoundryX)+i]=1;
-#                                opens[k*(BoundryY*BoundryX)+j*(BoundryX)+i]=opens[k*(BoundryY*BoundryX)+j*(BoundryX)+i]+1
-#                            if (space[k*(BoundryY*BoundryX)+(j+1)*(BoundryX)+i]) == u"\u25A1":
-#                                openf[k*(BoundryY*BoundryX)+j*(BoundryX)+i]=1;
-#                                opens[k*(BoundryY*BoundryX)+j*(BoundryX)+i]=opens[k*(BoundryY*BoundryX)+j*(BoundryX)+i]+1
-#                            if (space[(k-1)*(BoundryY*BoundryX)+j*(BoundryX)+i]) == u"\u25A1":
-#                                openb[k*(BoundryY*BoundryX)+j*(BoundryX)+i]=1;
-#                                opens[k*(BoundryY*BoundryX)+j*(BoundryX)+i]=opens[k*(BoundryY*BoundryX)+j*(BoundryX)+i]+1
-#                            if (space[(k+1)*(BoundryY*BoundryX)+j*(BoundryX)+i]) == u"\u25A1":
-#                                opent[k*(BoundryY*BoundryX)+j*(BoundryX)+i]=1;
-#                                opens[k*(BoundryY*BoundryX)+j*(BoundryX)+i]=opens[k*(BoundryY*BoundryX)+j*(BoundryX)+i]+1
+#                            if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+(i-1)]) == u"\u25A1":
+#                                openl[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=1;
+#                                opens[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=opens[k*(boundaryY*boundaryX)+j*(boundaryX)+i]+1
+#                            if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+(i+1)]) == u"\u25A1":
+#                                openr[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=1;
+#                                opens[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=opens[k*(boundaryY*boundaryX)+j*(boundaryX)+i]+1
+#                            if (space[k*(boundaryY*boundaryX)+(j-1)*(boundaryX)+i]) == u"\u25A1":
+#                                opena[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=1;
+#                                opens[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=opens[k*(boundaryY*boundaryX)+j*(boundaryX)+i]+1
+#                            if (space[k*(boundaryY*boundaryX)+(j+1)*(boundaryX)+i]) == u"\u25A1":
+#                                openf[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=1;
+#                                opens[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=opens[k*(boundaryY*boundaryX)+j*(boundaryX)+i]+1
+#                            if (space[(k-1)*(boundaryY*boundaryX)+j*(boundaryX)+i]) == u"\u25A1":
+#                                openb[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=1;
+#                                opens[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=opens[k*(boundaryY*boundaryX)+j*(boundaryX)+i]+1
+#                            if (space[(k+1)*(boundaryY*boundaryX)+j*(boundaryX)+i]) == u"\u25A1":
+#                                opent[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=1;
+#                                opens[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=opens[k*(boundaryY*boundaryX)+j*(boundaryX)+i]+1
 
             #Compress STLS and hopefuflly make it run faster
-            #for k in range (0, int(BoundryZ)):
-            #    for j in range (0,int(BoundryY)):
-            #        compressor[0] = 0
-            #        compressor[1] = 0
-            #        for i in range (0, int(BoundryX)):
-            #            
-            #            if (space[k*(BoundryY*BoundryX)+j*(BoundryX)+i] == u"\u25A0" and (space[(k)*(BoundryY*BoundryX)+j*(BoundryX)+i-1] == u"\u25A1" or i == 0)):
-            #                compressor[0]=i
-            #                compressor[1]=j
-            #            if (space[k*(BoundryY*BoundryX)+j*(BoundryX)+i] == u"\u25A0" and (space[(k)*(BoundryY*BoundryX)+j*(BoundryX)+i+1] == u"\u25A1" or i == BoundryX-1)):
-            #                compressor[2]=i
-            #            if compressor[0] != 0 and compressor[1] != 0:
-            #                for l in range (j, int(BoundryY)):
-            #                    for m in range (compressor[0], compressor[1]):
-            #                        if (space[k*(BoundryY*BoundryX)+j*(BoundryX)+i] == u"\u25A0" and (space[(k)*(BoundryY*BoundryX)+(j+1)*(BoundryX)+i] == u"\u25A1" or j == BoundryY-1)):
-            #                            compressor[3]=l
-            #                            print(compressor[0],compressor[1],compressor[2])
+            for k in range (0, int(BoundaryZ)):
+                for j in range (0,int(BoundaryY)):
+                    compressor[0] = 0
+                    compressor[1] = 0
+                    compressor[2] = 0
+                    compressor[3] = 0
+                    for i in range (0, int(BoundaryX)):
+                        
+                        if (space[k*(BoundaryY*BoundaryX)+j*(BoundaryX)+i] == u"\u25A0" and (space[(k)*(BoundaryY*BoundaryX)+j*(boundaryX)+i-1] == u"\u25A1" or i == 0)):
+                            compressor[0]=i
+                            compressor[1]=j
+                            print('x',i)
+                            print('y',j)
+                        if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A0" and (space[(k)*(boundaryY*boundaryX)+j*(boundaryX)+i+1] == u"\u25A1" or i == boundaryX-1)):
+                            compressor[2]=i
+                            print('x2',i)
+                        if compressor[0] != 0 and compressor[1] != 0 and compressor[2]:
+                            for l in range (j, int(boundaryY)):
+                                for m in range (compressor[0], compressor[1]):
+                                    if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A0" and (space[(k)*(boundaryY*boundaryX)+(j+1)*(boundaryX)+i] == u"\u25A1" or j == boundaryY-1)):
+                                        compressor[3]=l
+                                        if k == 0:
+                                            print('x1',compressor[0],'y1',compressor[1],'x2,',compressor[2],'y2',compressor[3])
                                                 
-            for k in range (0, int(BoundryZ)):
-                for j in range (0,int(BoundryY)):
-                    for i in range (0, int(BoundryX)):
-                        if (space[k*(BoundryY*BoundryX)+j*(BoundryX)+i] == u"\u25A0"):
-                            if (space[(k-1)*(BoundryY*BoundryX)+j*(BoundryX)+i] == u"\u25A1" or k == 0):
+            for k in range (0, int(boundaryZ)):
+                for j in range (0,int(boundaryY)):
+                    for i in range (0, int(boundaryX)):
+                        if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A0"):
+                            if (space[(k-1)*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A1" or k == 0):
                                 #Triangle RealAft1
                                 theVs[0]=i/percision
                                 theVs[1]=j/percision+1/percision
@@ -543,7 +549,7 @@ while (isopen==1):
                                 export.write(endfacet + '\n');
                                 export.write('\n');
 
-                            if (space[(k+1)*(BoundryY*BoundryX)+j*(BoundryX)+i] == u"\u25A1" or k == BoundryZ-1):
+                            if (space[(k+1)*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A1" or k == boundaryZ-1):
                                 #Triangle RealFront1
                                 theVs[0]=i/percision
                                 theVs[1]=j/percision
@@ -594,7 +600,7 @@ while (isopen==1):
                                 export.write('\n');
 
                             
-                            if (space[(k)*(BoundryY*BoundryX)+(j)*(BoundryX)+i-1] == u"\u25A1" or i == 0):
+                            if (space[(k)*(boundaryY*boundaryX)+(j)*(boundaryX)+i-1] == u"\u25A1" or i == 0):
                                 #Triangle L1
                                 theVs[0]=i/percision
                                 theVs[1]=j/percision
@@ -645,7 +651,7 @@ while (isopen==1):
                                 export.write('\n');
 
     
-                            if (space[(k)*(BoundryY*BoundryX)+(j)*(BoundryX)+i+1] == u"\u25A1"  or i == BoundryX-1):
+                            if (space[(k)*(boundaryY*boundaryX)+(j)*(boundaryX)+i+1] == u"\u25A1"  or i == boundaryX-1):
                                 #Triangle R1
                                 theVs[0]=i/percision+1/percision
                                 theVs[1]=j/percision
@@ -695,7 +701,7 @@ while (isopen==1):
                                 export.write(endfacet + '\n');
                                 export.write('\n');
 
-                            if (space[(k)*(BoundryY*BoundryX)+(j-1)*(BoundryX)+i] == u"\u25A1"  or j == 0):
+                            if (space[(k)*(boundaryY*boundaryX)+(j-1)*(boundaryX)+i] == u"\u25A1"  or j == 0):
                                 #Triangle Top1
                                 theVs[0]=i/percision+1/percision
                                 theVs[1]=j/percision
@@ -745,7 +751,7 @@ while (isopen==1):
                                 export.write(endfacet + '\n');
                                 export.write('\n');
 
-                            if (space[(k)*(BoundryY*BoundryX)+(j+1)*(BoundryX)+i] == u"\u25A1"  or j == BoundryY-1):
+                            if (space[(k)*(boundaryY*boundaryX)+(j+1)*(boundaryX)+i] == u"\u25A1"  or j == boundaryY-1):
                                 #Triangle Bottom1
                                 theVs[0]=i/percision+1/percision
                                 theVs[1]=j/percision+1/percision
@@ -863,16 +869,16 @@ while (isopen==1):
             operation[0]=int(operation[0]);
             print("Enter Depth Or T for Thru");
             operation[1]=input();
-            if ( operation[1] == "T" or operation[1] == "t" or int(operation[1]) > int(BoundryZ)):
-                operation[1] = BoundryZ;
+            if ( operation[1] == "T" or operation[1] == "t" or int(operation[1]) > int(boundaryZ)):
+                operation[1] = boundaryZ;
 
             for k in range (0, int(operation[1])+1):
-                for j in range (0, int(BoundryY)):
-                    for i in range (0, int(BoundryX)):
+                for j in range (0, int(boundaryY)):
+                    for i in range (0, int(boundaryX)):
                         #if (int(math.sqrt((k-(data[0]+1+lathe[0])/2+.5)**2+(j-(data[0]+1+lathe[1])/2+.5)**2) <= operation[0]/2)):
-                        if int(math.sqrt((i+.5-((BoundryX+lathe[0])/2))**2+(j+.5-((BoundryY+lathe[1])/2))**2)) <= (operation[0]-2)/2:
+                        if int(math.sqrt((i+.5-((boundaryX+lathe[0])/2))**2+(j+.5-((boundaryY+lathe[1])/2))**2)) <= (operation[0]-2)/2:
                             
-                            space[k*(BoundryX*BoundryY)+j*(BoundryX)+i]=u"\u25A1";
+                            space[k*(boundaryX*boundaryY)+j*(boundaryX)+i]=u"\u25A1";
         #TURNING 
         if (command == "T" or command == "t"):
             print("Enter Bit Diameter");
@@ -883,14 +889,14 @@ while (isopen==1):
             print("Enter Depth Or T for Thru");
             operation[1]=input();
             if ( operation[1] == "T" or operation[1] == "t" or int(operation[1]) > int(data[1])):
-                operation[1] = BoundryZ;
+                operation[1] = boundaryZ;
 
             
             for k in range (int(operation[2]), int(operation[1])):
-                for j in range (0, int(BoundryY)):
-                    for i in range (0, int(BoundryX)):
-                        if (int(math.sqrt(         (i-(BoundryX+lathe[0])/2+.5)**2         +(j-(BoundryY+lathe[1])/2+.5)**2          )   ) >= operation[0]/2):
-                            space[k*(BoundryX*BoundryY)+j*(BoundryX)+i]=u"\u25A1";
+                for j in range (0, int(boundaryY)):
+                    for i in range (0, int(boundaryX)):
+                        if (int(math.sqrt(         (i-(boundaryX+lathe[0])/2+.5)**2         +(j-(boundaryY+lathe[1])/2+.5)**2          )   ) >= operation[0]/2):
+                            space[k*(boundaryX*boundaryY)+j*(boundaryX)+i]=u"\u25A1";
 
     #Milling
     if (mode == "MillOperations"):
@@ -925,8 +931,8 @@ while (isopen==1):
                 
             
             for i in range (0, int(operation[1])):
-                for j in range (0, int(BoundryY)):
-                    for k in range (0, int(BoundryZ)):
+                for j in range (0, int(boundaryY)):
+                    for k in range (0, int(boundaryZ)):
                         for l in range(int(operation[3])+int(operation[0]/2), int(operation[5])-int(operation[0]/2)):
                             for m in range(int(operation[2]+operation[0]/2),int(operation[4]-operation[0]/2)):
                                 if (int(math.sqrt((k-m)**2+(j-l)**2) <= int(operation[0])/2)):
@@ -968,10 +974,10 @@ while (isopen==1):
             mode = "StockOperations";
         
         material[2]=0
-        for k in range (0, int(BoundryZ)):
-            for j in range (0,int(BoundryY)):
-                for i in range (0, int(BoundryX)):
-                    if (space[k*(BoundryY*BoundryX)+j*(BoundryX)+i] == u"\u25A0"):
+        for k in range (0, int(boundaryZ)):
+            for j in range (0,int(boundaryY)):
+                for i in range (0, int(boundaryX)):
+                    if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A0"):
                         material[2]=material[2]+1;
         print("Operations >>> Analysis")
         print("Enter M to select Material");
@@ -1043,21 +1049,21 @@ while (isopen==1):
             thermalsetup[3] = input();
             print("Enter Initial Temp");
             thermalsetup[4] = input();
-            spacetemp[int(thermalsetup[3])*(BoundryY*BoundryX)+int(thermalsetup[2])*(BoundryX)+ int(thermalsetup[1])]=int(thermalsetup[4]);
+            spacetemp[int(thermalsetup[3])*(boundaryY*boundaryX)+int(thermalsetup[2])*(boundaryX)+ int(thermalsetup[1])]=int(thermalsetup[4]);
 
             
         if (command == "H" or command == "h"):
-            for k in range (0, int(BoundryZ)):
-                for j in range (0,int(BoundryY)):
-                    for i in range (0, int(BoundryX)):
-                        if (space[k*(BoundryY*BoundryX)+j*(BoundryX)+i] == u"\u25A1"):
-                            spacetemp[k*(BoundryY*BoundryX)+j*(BoundryX)+i]="X";
-                        if (space[k*(BoundryY*BoundryX)+j*(BoundryX)+i] == u"\u25A0"):
-                            spacetemp[k*(BoundryY*BoundryX)+j*(BoundryX)+i]=0;
-            for k in range(0, int(BoundryZ)*percision):
+            for k in range (0, int(boundaryZ)):
+                for j in range (0,int(boundaryY)):
+                    for i in range (0, int(boundaryX)):
+                        if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A1"):
+                            spacetemp[k*(boundaryY*boundaryX)+j*(boundaryX)+i]="X";
+                        if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A0"):
+                            spacetemp[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=0;
+            for k in range(0, int(boundaryZ)*percision):
                 print("");
                 print("Layer ", i+1);
-                for j in range(0, int(BoundryY)*percision):
-                    for i in range(0, int(BoundryX)*percision):
-                        print(spacetemp[   int(k*(BoundryX*BoundryY*percision)+j*(BoundryX*percision))+i     ], u"\u00B0" ,end = "");
+                for j in range(0, int(boundaryY)*percision):
+                    for i in range(0, int(boundaryX)*percision):
+                        print(spacetemp[   int(k*(boundaryX*boundaryY*percision)+j*(boundaryX*percision))+i     ], u"\u00B0" ,end = "");
                     print("");
