@@ -19,12 +19,15 @@ highlow = {}
 
 stlprep = {}
 adjacents={}
+
 operation = {}
 lathe = {}
 mill = {}
+
 top = {}
 front = {}
 right = {}
+
 theVs = {}
 openl = {}
 openr = {}
@@ -995,8 +998,10 @@ while (isopen==1):
             print("Enter Inner Diameter")
             operation[0]=input()
             operation[0]=int(operation[0])
-            operation[4]=15
-            print("Enter Thrads per Centimeter")
+            print("Enter Outter Diameter")
+            operation[4]=input()
+            operation[4]=int(operation[4])
+            print("Enter mm between threads")
             operation[3]=input()
             operation[3]=int(operation[3])
             print("Enter Start Depth")
@@ -1005,15 +1010,17 @@ while (isopen==1):
             print("Enter Final Depth")
             operation[1]=input()
             operation[1]=int(operation[1])
-            for k in range (0, int(operation[1])):
+            for k in range (int(operation[2]), int(operation[1])):
+                angle=(k%operation[3])/operation[3]*360
+                t1=(operation[4]-operation[0])*math.sin(angle*math.pi/180)
+                t2=(operation[4]-operation[0])*math.cos(angle*math.pi/180)
+                
                 for j in range (0, int(boundaryY)):
                     for i in range (0, int(boundaryX)):
-                        if i > (boundaryX-1)/2 and j < (boundaryY-1)/2:
-                            angle = math.degrees(math.atan((i-(boundaryX+1)/2)/(j-(boundaryY+1)/2)))
-                            print(i,j,angle)
-                        #if math.sqrt((i+.5-((boundaryX+lathe[0])/2))**2+(j+.5-((boundaryY+lathe[1])/2))**2) <= (operation[4]-(math.degrees(math.atan((i-boundaryX+1/2)/j-boundaryY+1/2)))-0)/180:
-                            #space[k*(boundaryX*boundaryY)+j*(boundaryX)+i]=u"\u25A1";
+                        if (int(math.sqrt(         (i-(boundaryX+lathe[0]+t1)/2+.5)**2         +(j-(boundaryY+lathe[1]+t2)/2+.5)**2          )   ) >= operation[0]/2):
+                            space[k*(boundaryX*boundaryY)+j*(boundaryX)+i]=u"\u25A1";
 
+                            
     #Milling
     if (mode == "MillOperations"):
         print("Operations >>> Mill Operations")
