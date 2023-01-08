@@ -14,32 +14,34 @@ spacek = {};
 thermalsetup = {};
 thermalsetup[0]=0;
 
+#Highest and lowest points operated on to make exporting faster
+highlow = {}
 
-stlprep = {};
-adjacents={};
-operation = {};
-lathe = {};
-mill = {};
-top = {};
-front = {};
-right = {};
-theVs = {};
-openl = {};
-openr = {};
-opena = {};
-openf = {};
-openb = {};
-opent = {};
-opens = {};
-processplanner = {};
-operationnum = 0;
-material = {};
+stlprep = {}
+adjacents={}
+operation = {}
+lathe = {}
+mill = {}
+top = {}
+front = {}
+right = {}
+theVs = {}
+openl = {}
+openr = {}
+opena = {}
+openf = {}
+openb = {}
+opent = {}
+opens = {}
+processplanner = {}
+operationnum = 0
+material = {}
 material[0]="Aluminum"
 material[1]=2700
 
 compressor = {}
 
-header = "solid madeWithJohnCAD";
+header = "solid MadeWithJohnCAD"
 facetn = "facet normal 0 0 0"
 oloop = 'outer loop'
 eloop ='endloop'
@@ -106,7 +108,7 @@ while (isopen==1):
                 mode = "SheetOperations";
                 selection=0;
         print("Thickness, Width, Height")
-        print(data[0],'"',data[1],'"',data[2],'"');
+        print(data[0],'mm',data[1],'mm',data[2],'mm');
 
 #Ok, this is to assist the Z value to ensure there are enough blank spaces.
         x=data[1];
@@ -147,7 +149,7 @@ while (isopen==1):
                 mode = "StockOperations";
                 selection=0;
         print("Diameter, Length");
-        print(data[0], '"' ,data[1], '"');
+        print(data[0], 'mm' ,data[1], 'mm');
         command = input("Press Enter To Generate");
         
 
@@ -157,7 +159,7 @@ while (isopen==1):
             for j in range (0, int(boundaryY)):
                 for i in range (0, int(boundaryX)):
                     space[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=u"\u25A1";
-        for k in range (int(boundaryZ), int(boundaryZ)+1):
+        for k in range (int(boundaryZ), int(boundaryZ)+2):
             for j in range (0, int(boundaryY)):
                 for i in range (0, int(boundaryX)):
                     space[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=u"\u25A1";
@@ -214,11 +216,20 @@ while (isopen==1):
                 boundaryZ = command;
                 mode = "StockOperations";
                 selection=0;
+        for k in range (-1, 0):
+            for j in range (0, int(boundaryY)):
+                for i in range (0, int(boundaryX)):
+                    space[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=u"\u25A1";
+        for k in range (int(boundaryZ), int(boundaryZ)+2):
+            for j in range (0, int(boundaryY)):
+                for i in range (0, int(boundaryX)):
+                    space[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=u"\u25A1";
         for k in range (-1, int(boundaryZ)+1*percision):
             for j in range (0, int(boundaryY)*percision):
                 for i in range (0, int(boundaryX)*percision):
                     space[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=u"\u25A0";
-
+        print("Thickness, Width, Height")
+        print(data[0],'mm',data[1],'mm',data[2],'mm');
 
     #Sheetmetal operations
     if (mode=="SheetOperations"):
@@ -491,13 +502,9 @@ while (isopen==1):
                     for i in range (0, int(boundaryX)):
                         if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A0" and space[(k-1)*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A1" and compressor[0] == -1):
                             compressor[0]=i
-                            print('test1',k,i)
                         if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A0" and (space[(k-1)*(boundaryY*boundaryX)+j*(boundaryX)+i+1] == u"\u25A0" or space[(k)*(boundaryY*boundaryX)+j*(boundaryX)+i+1] == u"\u25A1" or i==boundaryX-1) and compressor[0] != -1 and compressor[1] == -1):
                             compressor[1]=i+1
                         if compressor[0] != -1 and compressor[1] != -1:
-                            
-                            print('test2',k,i)
-                            print('test3')
                             #Triangle RealAft1
                             theVs[0]=compressor[0]/percision
                             theVs[1]=j/percision+1/percision
@@ -530,15 +537,15 @@ while (isopen==1):
                             point4= "vertex " + str(theVs[12])+ " " + str(theVs[13])+ " " + str(theVs[14])
                             point5= "vertex " + str(theVs[15])+ " " + str(theVs[16])+ " " + str(theVs[17])
 
-                            export.write("facet normal 0 0 0" + '\n');
-                            export.write("outer loop" + '\n');                            
+                            export.write(facetn + '\n');
+                            export.write(oloop + '\n');                            
                             export.write(str(point0) + '\n');
                             export.write(str(point1) + '\n');
                             export.write(str(point2) + '\n');
                             export.write(eloop + '\n');
                             export.write(endfacet + '\n');
-                            export.write("facet normal 0 0 0" + '\n');
-                            export.write("outer loop" + '\n');                            
+                            export.write(facetn + '\n');
+                            export.write(oloop + '\n');                            
                             export.write(str(point3) + '\n');
                             export.write(str(point4) + '\n');
                             export.write(str(point5) + '\n');
@@ -553,14 +560,9 @@ while (isopen==1):
                         #Front
                         if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A0" and space[(k+1)*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A1" and compressor[2] == -1):
                             compressor[2]=i
-                            print('test1',k,i)
                         if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A0" and (space[(k+1)*(boundaryY*boundaryX)+j*(boundaryX)+i+1] == u"\u25A0" or space[(k)*(boundaryY*boundaryX)+j*(boundaryX)+i+1] == u"\u25A1" or i==boundaryX-1) and compressor[2] != -1 and compressor[3] == -1):
                             compressor[3]=i+1
-                            print('test2',k,i)
                         if compressor[2] != -1 and compressor[3] != -1:
-                            
-                            
-                            print('test3')
                             #Triangle RealFront1
                             theVs[0]=compressor[2]/percision
                             theVs[1]=j/percision+1/percision
@@ -587,21 +589,21 @@ while (isopen==1):
                             theVs[17]=k/percision+1
                             
                             point0= "vertex " + str(theVs[0]) + " " + str(theVs[1])+ " " + str(theVs[2])
-                            point1= "vertex " + str(theVs[3])+ " " + str(theVs[4])+ " " + str(theVs[5])
-                            point2= "vertex " + str(theVs[6])+ " " + str(theVs[7])+ " " + str(theVs[8])
+                            point2= "vertex " + str(theVs[3])+ " " + str(theVs[4])+ " " + str(theVs[5])
+                            point1= "vertex " + str(theVs[6])+ " " + str(theVs[7])+ " " + str(theVs[8])
                             point3= "vertex " + str(theVs[9])+ " " + str(theVs[10])+ " " + str(theVs[11])
-                            point4= "vertex " + str(theVs[12])+ " " + str(theVs[13])+ " " + str(theVs[14])
-                            point5= "vertex " + str(theVs[15])+ " " + str(theVs[16])+ " " + str(theVs[17])
+                            point5= "vertex " + str(theVs[12])+ " " + str(theVs[13])+ " " + str(theVs[14])
+                            point4= "vertex " + str(theVs[15])+ " " + str(theVs[16])+ " " + str(theVs[17])
 
-                            export.write("facet normal 0 0 0" + '\n');
-                            export.write("outer loop" + '\n');                            
+                            export.write(facetn + '\n');
+                            export.write(oloop + '\n');                            
                             export.write(str(point0) + '\n');
                             export.write(str(point1) + '\n');
                             export.write(str(point2) + '\n');
                             export.write(eloop + '\n');
                             export.write(endfacet + '\n');
-                            export.write("facet normal 0 0 0" + '\n');
-                            export.write("outer loop" + '\n');                            
+                            export.write(facetn + '\n');
+                            export.write(oloop + '\n');                            
                             export.write(str(point3) + '\n');
                             export.write(str(point4) + '\n');
                             export.write(str(point5) + '\n');
@@ -624,11 +626,8 @@ while (isopen==1):
                         if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A0" and space[(k)*(boundaryY*boundaryX)+(j-1)*(boundaryX)+i] == u"\u25A1" and +(space[(k)*(boundaryY*boundaryX)+j*(boundaryX)+i-1] == u"\u25A1" or i == 0)):
                             compressor[0]=k
                             compressor[1]=i
-                            #print('z',compressor[0])
-                            #print('x1',compressor[1])
                         if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A0" and space[(k)*(boundaryY*boundaryX)+(j-1)*(boundaryX)+(i)] != u"\u25A0" and space[(k)*(boundaryY*boundaryX)+j*(boundaryX)+(i+1)] == u"\u25A1" and (space[(k)*(boundaryY*boundaryX)+j*(boundaryX)+i+1] == u"\u25A1" or i == boundaryX-1)):
                             compressor[2]=i+1
-                            #print('x2',compressor[2])
                         if compressor[0] != -1 and compressor[1] != -1 and compressor[2]!= -1:
                             #print('test')
                                 #Triangle Bottom1
@@ -729,15 +728,15 @@ while (isopen==1):
                                 point5= "vertex " + str(theVs[15])+ " " + str(theVs[16])+ " " + str(theVs[17])
 
                                 
-                                export.write("facet normal 0 0 0" + '\n');
-                                export.write("outer loop" + '\n');                            
+                                export.write(facetn + '\n');
+                                export.write(oloop + '\n');                            
                                 export.write(str(point0) + '\n');
                                 export.write(str(point1) + '\n');
                                 export.write(str(point2) + '\n');
                                 export.write(eloop + '\n');
                                 export.write(endfacet + '\n');
-                                export.write("facet normal 0 0 0" + '\n');
-                                export.write("outer loop" + '\n');                            
+                                export.write(facetn + '\n');
+                                export.write(oloop + '\n');                            
                                 export.write(str(point3) + '\n');
                                 export.write(str(point4) + '\n');
                                 export.write(str(point5) + '\n');
@@ -780,15 +779,15 @@ while (isopen==1):
                                 point5= "vertex " + str(theVs[15])+ " " + str(theVs[16])+ " " + str(theVs[17])
 
                                 
-                                export.write("facet normal 0 0 0" + '\n');
-                                export.write("outer loop" + '\n');                            
+                                export.write(facetn + '\n');
+                                export.write(oloop + '\n');                            
                                 export.write(str(point0) + '\n');
                                 export.write(str(point1) + '\n');
                                 export.write(str(point2) + '\n');
                                 export.write(eloop + '\n');
                                 export.write(endfacet + '\n');
-                                export.write("facet normal 0 0 0" + '\n');
-                                export.write("outer loop" + '\n');                            
+                                export.write(facetn + '\n');
+                                export.write(oloop + '\n');                            
                                 export.write(str(point3) + '\n');
                                 export.write(str(point4) + '\n');
                                 export.write(str(point5) + '\n');
@@ -830,15 +829,15 @@ while (isopen==1):
                                 point5= "vertex " + str(theVs[15])+ " " + str(theVs[16])+ " " + str(theVs[17])
 
                                 
-                                export.write("facet normal 0 0 0" + '\n');
-                                export.write("outer loop" + '\n');                            
+                                export.write(facetn + '\n');
+                                export.write(oloop + '\n');                            
                                 export.write(str(point0) + '\n');
                                 export.write(str(point1) + '\n');
                                 export.write(str(point2) + '\n');
                                 export.write(eloop + '\n');
                                 export.write(endfacet + '\n');
-                                export.write("facet normal 0 0 0" + '\n');
-                                export.write("outer loop" + '\n');                            
+                                export.write(facetn + '\n');
+                                export.write(oloop + '\n');                            
                                 export.write(str(point3) + '\n');
                                 export.write(str(point4) + '\n');
                                 export.write(str(point5) + '\n');
@@ -880,15 +879,15 @@ while (isopen==1):
                                 point5= "vertex " + str(theVs[15])+ " " + str(theVs[16])+ " " + str(theVs[17])
 
                                 
-                                export.write("facet normal 0 0 0" + '\n');
-                                export.write("outer loop" + '\n');                            
+                                export.write(facetn + '\n');
+                                export.write(oloop + '\n');                            
                                 export.write(str(point0) + '\n');
                                 export.write(str(point1) + '\n');
                                 export.write(str(point2) + '\n');
                                 export.write(eloop + '\n');
                                 export.write(endfacet + '\n');
-                                export.write("facet normal 0 0 0" + '\n');
-                                export.write("outer loop" + '\n');                            
+                                export.write(facetn + '\n');
+                                export.write(oloop + '\n');                            
                                 export.write(str(point3) + '\n');
                                 export.write(str(point4) + '\n');
                                 export.write(str(point5) + '\n');
@@ -958,7 +957,7 @@ while (isopen==1):
 
         if (command == "z"):
             mode = "StockOperations"
-        #Boreing, formerly drilling, but an angled point would take to long to make
+        #Boreing, formerly drilling
         if (command == "B" or command == "b"):
             print("Enter Bit Diameter");
             operation[0]=input();
@@ -971,7 +970,6 @@ while (isopen==1):
             for k in range (0, int(operation[1])):
                 for j in range (0, int(boundaryY)):
                     for i in range (0, int(boundaryX)):
-                        #if (int(math.sqrt((k-(data[0]+1+lathe[0])/2+.5)**2+(j-(data[0]+1+lathe[1])/2+.5)**2) <= operation[0]/2)):
                         if math.sqrt((i+.5-((boundaryX+lathe[0])/2))**2+(j+.5-((boundaryY+lathe[1])/2))**2) <= (operation[0]-1)/2:
                             space[k*(boundaryX*boundaryY)+j*(boundaryX)+i]=u"\u25A1";
         #TURNING 
@@ -997,6 +995,7 @@ while (isopen==1):
             print("Enter Inner Diameter")
             operation[0]=input()
             operation[0]=int(operation[0])
+            operation[4]=15
             print("Enter Thrads per Centimeter")
             operation[3]=input()
             operation[3]=int(operation[3])
@@ -1006,13 +1005,15 @@ while (isopen==1):
             print("Enter Final Depth")
             operation[1]=input()
             operation[1]=int(operation[1])
-
-            for k in range (int(operation[2]), int(operation[1])):
+            for k in range (0, int(operation[1])):
                 for j in range (0, int(boundaryY)):
                     for i in range (0, int(boundaryX)):
-                        if (int(math.sqrt(         (i-(boundaryX+lathe[0])/2+.5)**2         +(j-(boundaryY+lathe[1])/2+.5)**2          )   ) >= operation[0]/2 and math.atan((1-boundaryX/2)/(1-boundaryY/2)) < k-operation[2]%operation[3]/operation[3]*360 + math.atan(1/operation[0]) and math.atan((1-boundaryX/2)/(1-boundaryY/2)) < k-operation[2]%operation[3]/operation[3]*360 + math.atan(1/operation[0])):
-                            space[k*(boundaryX*boundaryY)+j*(boundaryX)+i]=u"\u25A1";
-                            
+                        if i > (boundaryX-1)/2 and j < (boundaryY-1)/2:
+                            angle = math.degrees(math.atan((i-(boundaryX+1)/2)/(j-(boundaryY+1)/2)))
+                            print(i,j,angle)
+                        #if math.sqrt((i+.5-((boundaryX+lathe[0])/2))**2+(j+.5-((boundaryY+lathe[1])/2))**2) <= (operation[4]-(math.degrees(math.atan((i-boundaryX+1/2)/j-boundaryY+1/2)))-0)/180:
+                            #space[k*(boundaryX*boundaryY)+j*(boundaryX)+i]=u"\u25A1";
+
     #Milling
     if (mode == "MillOperations"):
         print("Operations >>> Mill Operations")
