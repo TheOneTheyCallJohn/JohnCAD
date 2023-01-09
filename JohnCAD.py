@@ -23,6 +23,7 @@ adjacents={}
 operation = {}
 lathe = {}
 mill = {}
+drill = {}
 
 top = {}
 front = {}
@@ -201,10 +202,10 @@ while (isopen==1):
                         if math.sqrt((i+.5-((boundaryX)/2))**2+(j+.5-((boundaryY)/2))**2) <= (data[0]*percision)/2:
                             space[(k)*(boundaryX*boundaryY)+(j)*(boundaryY)+i]=u"\u25A0";
                             data[2]=data[2]+1
-                        elif math.sqrt((i+.5-((boundaryX)/2))**2+(j+.5-((boundaryY)/2))**2) > (data[0]*percision)/2 and math.sqrt((i+.5-((boundaryX)/2))**2+(j+.5-((boundaryY)/2))**2) < (data[0]*percision)/2+1:
-                            space[(k)*(boundaryX*boundaryY)+(j)*(boundaryY)+i]=u"\u25A2";
+                        #elif math.sqrt((i+.5-((boundaryX)/2))**2+(j+.5-((boundaryY)/2))**2) > (data[0]*percision)/2 and math.sqrt((i+.5-((boundaryX)/2))**2+(j+.5-((boundaryY)/2))**2) < (data[0]*percision)/2+1:
+                            #space[(k)*(boundaryX*boundaryY)+(j)*(boundaryY)+i]=u"\u25A2";
                             
-                        elif math.sqrt((i+.5-((boundaryX)/2))**2+(j+.5-((boundaryY)/2))**2) > (data[0]*percision)/2+1:
+                        elif math.sqrt((i+.5-((boundaryX)/2))**2+(j+.5-((boundaryY)/2))**2) > (data[0]*percision)/2:
                             space[(k)*(boundaryX*boundaryY)+(j)*(boundaryY)+i]=u"\u25A1";
                             
     #Barstock deatils   
@@ -216,7 +217,7 @@ while (isopen==1):
             data[0] = 1
             if (command > 0):
                 data[0] = command;
-                boundaryX=command;
+                boundaryX=command*percision;
                 selection=1;
         while (selection==1):
             print("Enter Stock Height Y")
@@ -225,7 +226,7 @@ while (isopen==1):
             data[1] = 1;
             if (command > 0):
                 data[1] = command;
-                boundaryY = command;
+                boundaryY = command*percision;
                 mode = "StockOperations";
                 selection=2;
         while (selection==2):
@@ -235,7 +236,7 @@ while (isopen==1):
             data[1] = 1;
             if (command > 0):
                 data[2] = command;
-                boundaryZ = command;
+                boundaryZ = command*percision;
                 mode = "StockOperations";
                 selection=0;
         for k in range (-1, 0):
@@ -246,7 +247,7 @@ while (isopen==1):
             for j in range (0, int(boundaryY)):
                 for i in range (0, int(boundaryX)):
                     space[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=u"\u25A1";
-        for k in range (-1, int(boundaryZ)+1*percision):
+        for k in range (0, int(boundaryZ)*percision):
             for j in range (0, int(boundaryY)*percision):
                 for i in range (0, int(boundaryX)*percision):
                     space[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=u"\u25A0";
@@ -522,9 +523,9 @@ while (isopen==1):
                     compressor[2] = -1
                     compressor[3] = -1
                     for i in range (0, int(boundaryX)):
-                        if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A0" and space[(k-1)*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A1" and compressor[0] == -1):
+                        if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A0" and space[(k-1)*(boundaryY*boundaryX)+j*(boundaryX)+i] != u"\u25A0" and compressor[0] == -1):
                             compressor[0]=i
-                        if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A0" and (space[(k-1)*(boundaryY*boundaryX)+j*(boundaryX)+i+1] == u"\u25A0" or space[(k)*(boundaryY*boundaryX)+j*(boundaryX)+i+1] == u"\u25A1" or i==boundaryX-1) and compressor[0] != -1 and compressor[1] == -1):
+                        if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A0" and (space[(k-1)*(boundaryY*boundaryX)+j*(boundaryX)+i+1] == u"\u25A0" or space[(k)*(boundaryY*boundaryX)+j*(boundaryX)+i+1] != u"\u25A0" or i==boundaryX-1) and compressor[0] != -1 and compressor[1] == -1):
                             compressor[1]=i+1
                         if compressor[0] != -1 and compressor[1] != -1:
                             #Triangle RealAft1
@@ -554,15 +555,13 @@ while (isopen==1):
                             
                             points()
 
-
                             compressor[0]=-1
                             compressor[1]=-1
 
-
                         #Front
-                        if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A0" and space[(k+1)*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A1" and compressor[2] == -1):
+                        if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A0" and space[(k+1)*(boundaryY*boundaryX)+j*(boundaryX)+i] != u"\u25A0" and compressor[2] == -1):
                             compressor[2]=i
-                        if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A0" and (space[(k+1)*(boundaryY*boundaryX)+j*(boundaryX)+i+1] == u"\u25A0" or space[(k)*(boundaryY*boundaryX)+j*(boundaryX)+i+1] == u"\u25A1" or i==boundaryX-1) and compressor[2] != -1 and compressor[3] == -1):
+                        if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A0" and (space[(k+1)*(boundaryY*boundaryX)+j*(boundaryX)+i+1] == u"\u25A0" or space[(k)*(boundaryY*boundaryX)+j*(boundaryX)+i+1] != u"\u25A0" or i==boundaryX-1) and compressor[2] != -1 and compressor[3] == -1):
                             compressor[3]=i+1
                         if compressor[2] != -1 and compressor[3] != -1:
                             #Triangle RealFront1
@@ -801,7 +800,9 @@ while (isopen==1):
         if (command == "M" or command == "m"):
             mode = "MillOperations"
 
-        
+        if (command == "T" or command =="t"):
+            mode = "DrillToolOperations"
+
     if (mode == "LatheOperations"):
         print("Operations >>> Lathe Operations")
         print("Enter O for Offset Currently:");
@@ -854,7 +855,6 @@ while (isopen==1):
             operation[1]=input();
             if ( operation[1] == "T" or operation[1] == "t" or int(operation[1]) > int(data[1])):
                 operation[1] = boundaryZ;
-
             
             for k in range (int(operation[2]), int(operation[1])):
                 for j in range (0, int(boundaryY)):
@@ -936,28 +936,62 @@ while (isopen==1):
             print("Enter Bit Depth")
             operation[1]=int(input());
             print("Enter Direction H or V")
-            operation[2]=input();
+            operation[2]="h"
             if (operation[2] == "H" or operation[2] == "h"):  
                 print("Enter Y")
                 operation[3]=int(input());
-                print("Enter Start X")
-                operation[4]=int(input());        
-                print("Enter End X")
-                operation[5]=int(input());
+                #print("Enter Start X")
+                #operation[4]=int(input());        
+                #print("Enter End X")
+                #operation[5]=int(input());
             if (operation[2] == "V" or operation[2] == "v"):  
                 print("Enter X")
                 operation[3]=int(input());
                 print("Enter Start Y")
                 operation[4]=int(input());        
                 print("Enter End Y")
-                operation[5]=int(input());   
-            for i in range (0, int(operation[1])):
-                for j in range (0, int(data[0])):
-                    for k in range (0, int(data[0])):
-                        for l in range (operation[3],operation[4]):
-                            print("Test")
+                operation[5]=int(input());
+    
+            for k in range (0, int(operation[1])):
+                for j in range (0, int(boundaryY)):
+                    for i in range (0, int(boundaryX)):
+                        if (abs(j-operation[3]) < operation[0]/2):
+                            space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] = u"\u25A1"
 
-                        
+    #Hand tools                    
+    if (mode == "DrillOperations"):
+        drill[0]=0
+        drill[1]=0
+        print("Operations >>> DrillTool Operations")
+        print("Enter T for Taper:");
+        print("Enter Z to return");
+        command=input();
+        if (command == "Z" or command == "z"):
+            mode = "StockOperations";
+        if (command == "T" or command == "t"):
+            print("Enter Inner Diameter")
+            operation[0]=input()
+            operation[0]=int(operation[0])
+            print("Enter Outer Diameter")
+            operation[4]=input()
+            operation[4]=int(operation[4])
+            print("Enter mm between threads")
+            operation[3]=input()
+            operation[3]=int(operation[3])
+            print("Enter Start Depth")
+            operation[2]=input()
+            operation[2]=int(operation[2])
+            print("Enter Final Depth")
+            operation[1]=input()
+            operation[1]=int(operation[1])
+            for k in range (int(operation[2]), int(operation[1])):
+                angle=(k%operation[3])/operation[3]*360
+                t1=(operation[0]-operation[4])*math.sin(angle*math.pi/180)
+                t2=(operation[0]-operation[4])*math.cos(angle*math.pi/180)
+                for j in range (0, int(boundaryY)):
+                    for i in range (0, int(boundaryX)):
+                        if (int(math.sqrt(         (i-(boundaryX+drill[0]+t1)/2+.5)**2         +(j-(boundaryY+drill[1]+t2)/2+.5)**2          )   ) <= operation[4]/2):
+                            space[k*(boundaryX*boundaryY)+j*(boundaryX)+i]=u"\u25A1";
         
     if (mode == "Analysis"):
 
@@ -983,7 +1017,9 @@ while (isopen==1):
         if (command == "Z" or command == "z"):
             mode = "StockOperations";
 
-            
+
+
+
             #From https://www.theworldmaterial.com/density-of-metals/
         if (command == "M" or command == "m"):
             print("a: Steel, Density 7,850 kg/m3")
