@@ -53,6 +53,32 @@ footer = "endsolid MadeWithJohncad";
 percision = 1;
 
 
+#Finally going to define some functions
+def points():
+    point0= "vertex " + str(theVs[0]) + " " + str(theVs[1])+ " " + str(theVs[2])
+    point1= "vertex " + str(theVs[3])+ " " + str(theVs[4])+ " " + str(theVs[5])
+    point2= "vertex " + str(theVs[6])+ " " + str(theVs[7])+ " " + str(theVs[8])
+    point3= "vertex " + str(theVs[9])+ " " + str(theVs[10])+ " " + str(theVs[11])
+    point4= "vertex " + str(theVs[12])+ " " + str(theVs[13])+ " " + str(theVs[14])
+    point5= "vertex " + str(theVs[15])+ " " + str(theVs[16])+ " " + str(theVs[17])
+
+    export.write(facetn + '\n');
+    export.write(oloop + '\n');                            
+    export.write(str(point0) + '\n');
+    export.write(str(point1) + '\n');
+    export.write(str(point2) + '\n');
+    export.write(eloop + '\n');
+    export.write(endfacet + '\n');
+    export.write(facetn + '\n');
+    export.write(oloop + '\n');                            
+    export.write(str(point3) + '\n');
+    export.write(str(point4) + '\n');
+    export.write(str(point5) + '\n');
+    export.write(eloop + '\n');
+    export.write(endfacet + '\n');
+    export.write('\n');
+
+
 
 
 
@@ -66,7 +92,6 @@ while (isopen==1):
         print("'W' Weld Comming Soon");
         print("'P' Percision Select Currently 1/", percision, "mm")
         command = input();
-        print(math.sqrt(25));
         
         if (command == "S" or command == "s"):
             stock="SheetMetal";
@@ -168,26 +193,20 @@ while (isopen==1):
                     space[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=u"\u25A1";
         data[2]=0
 
-        #even diameters
-        if data[0]%2==0:
-            for k in range (0, int(boundaryZ)):
-                for j in range (0, int(boundaryY)):
-                    for i in range (0, int(boundaryX)):
-                        if int(math.sqrt((i+.5-(math.floor(boundaryX)/2))**2+(j+.5-(math.floor(boundaryY)/2))**2)) <= (data[0]*percision-1)/2: #Rework later
-                            space[(k)*(boundaryX*boundaryY)+(j)*(boundaryY)+i]=u"\u25A0";
-                            data[2]=data[2]+1
-                        if int(math.sqrt((i+.5-(math.floor(boundaryX)/2))**2+(j+.5-(math.floor(boundaryY)/2))**2)) > (data[0]*percision-1)/2:
-                            space[(k)*(boundaryX*boundaryY)+(j)*(boundaryY)+i]=u"\u25A1";
-        #odd diameters
-        if data[0]%2==1:
+
+        if data[0]%2==1 or 1 == 1:
             for k in range (0, int(boundaryZ)):
                 for j in range (0, int(boundaryY)):
                     for i in range (0, int(boundaryX)):
                         if math.sqrt((i+.5-((boundaryX)/2))**2+(j+.5-((boundaryY)/2))**2) <= (data[0]*percision)/2:
                             space[(k)*(boundaryX*boundaryY)+(j)*(boundaryY)+i]=u"\u25A0";
                             data[2]=data[2]+1
-                        if math.sqrt((i+.5-((boundaryX)/2))**2+(j+.5-((boundaryY)/2))**2) > (data[0]*percision)/2:
+                        elif math.sqrt((i+.5-((boundaryX)/2))**2+(j+.5-((boundaryY)/2))**2) > (data[0]*percision)/2 and math.sqrt((i+.5-((boundaryX)/2))**2+(j+.5-((boundaryY)/2))**2) < (data[0]*percision)/2+1:
+                            space[(k)*(boundaryX*boundaryY)+(j)*(boundaryY)+i]=u"\u25A2";
+                            
+                        elif math.sqrt((i+.5-((boundaryX)/2))**2+(j+.5-((boundaryY)/2))**2) > (data[0]*percision)/2+1:
                             space[(k)*(boundaryX*boundaryY)+(j)*(boundaryY)+i]=u"\u25A1";
+                            
     #Barstock deatils   
     if (mode=="Bdetails"):
         while (selection==0):
@@ -215,7 +234,7 @@ while (isopen==1):
             command = float(command);
             data[1] = 1;
             if (command > 0):
-                data[1] = command;
+                data[2] = command;
                 boundaryZ = command;
                 mode = "StockOperations";
                 selection=0;
@@ -533,29 +552,9 @@ while (isopen==1):
                             theVs[16]=j/percision+1/percision
                             theVs[17]=k/percision
                             
-                            point0= "vertex " + str(theVs[0]) + " " + str(theVs[1])+ " " + str(theVs[2])
-                            point1= "vertex " + str(theVs[3])+ " " + str(theVs[4])+ " " + str(theVs[5])
-                            point2= "vertex " + str(theVs[6])+ " " + str(theVs[7])+ " " + str(theVs[8])
-                            point3= "vertex " + str(theVs[9])+ " " + str(theVs[10])+ " " + str(theVs[11])
-                            point4= "vertex " + str(theVs[12])+ " " + str(theVs[13])+ " " + str(theVs[14])
-                            point5= "vertex " + str(theVs[15])+ " " + str(theVs[16])+ " " + str(theVs[17])
+                            points()
 
-                            export.write(facetn + '\n');
-                            export.write(oloop + '\n');                            
-                            export.write(str(point0) + '\n');
-                            export.write(str(point1) + '\n');
-                            export.write(str(point2) + '\n');
-                            export.write(eloop + '\n');
-                            export.write(endfacet + '\n');
-                            export.write(facetn + '\n');
-                            export.write(oloop + '\n');                            
-                            export.write(str(point3) + '\n');
-                            export.write(str(point4) + '\n');
-                            export.write(str(point5) + '\n');
-                            export.write(eloop + '\n');
-                            export.write(endfacet + '\n');
-                            export.write('\n');
-                                
+
                             compressor[0]=-1
                             compressor[1]=-1
 
@@ -569,50 +568,30 @@ while (isopen==1):
                             #Triangle RealFront1
                             theVs[0]=compressor[2]/percision
                             theVs[1]=j/percision+1/percision
-                            theVs[2]=k/percision+1
+                            theVs[2]=k/percision+1/percision
 
-                            theVs[3]=compressor[3]/percision
+                            theVs[3]=compressor[2]/percision
                             theVs[4]=j/percision
-                            theVs[5]=k/percision+1
-
-                            theVs[6]=compressor[2]/percision
+                            theVs[5]=k/percision+1/percision
+                            
+                            theVs[6]=compressor[3]/percision
                             theVs[7]=j/percision
-                            theVs[8]=k/percision+1
+                            theVs[8]=k/percision+1/percision
+                            
                             #Triangle RealFront2
-                            theVs[9]=compressor[3]/percision
-                            theVs[10]=j/percision
-                            theVs[11]=k/percision+1
+                            theVs[9]=compressor[2]/percision
+                            theVs[10]=j/percision+1/percision
+                            theVs[11]=k/percision+1/percision
+                            
+                            theVs[12]=compressor[3]/percision
+                            theVs[13]=j/percision
+                            theVs[14]=k/percision+1/percision
 
-                            theVs[12]=compressor[2]/percision
-                            theVs[13]=j/percision+1/percision
-                            theVs[14]=k/percision+1
-    
                             theVs[15]=compressor[3]/percision
                             theVs[16]=j/percision+1/percision
-                            theVs[17]=k/percision+1
+                            theVs[17]=k/percision+1/percision
                             
-                            point0= "vertex " + str(theVs[0]) + " " + str(theVs[1])+ " " + str(theVs[2])
-                            point2= "vertex " + str(theVs[3])+ " " + str(theVs[4])+ " " + str(theVs[5])
-                            point1= "vertex " + str(theVs[6])+ " " + str(theVs[7])+ " " + str(theVs[8])
-                            point3= "vertex " + str(theVs[9])+ " " + str(theVs[10])+ " " + str(theVs[11])
-                            point5= "vertex " + str(theVs[12])+ " " + str(theVs[13])+ " " + str(theVs[14])
-                            point4= "vertex " + str(theVs[15])+ " " + str(theVs[16])+ " " + str(theVs[17])
-
-                            export.write(facetn + '\n');
-                            export.write(oloop + '\n');                            
-                            export.write(str(point0) + '\n');
-                            export.write(str(point1) + '\n');
-                            export.write(str(point2) + '\n');
-                            export.write(eloop + '\n');
-                            export.write(endfacet + '\n');
-                            export.write(facetn + '\n');
-                            export.write(oloop + '\n');                            
-                            export.write(str(point3) + '\n');
-                            export.write(str(point4) + '\n');
-                            export.write(str(point5) + '\n');
-                            export.write(eloop + '\n');
-                            export.write(endfacet + '\n');
-                            export.write('\n');
+                            points()
                                 
                             compressor[2]=-1
                             compressor[3]=-1
@@ -658,29 +637,7 @@ while (isopen==1):
                             theVs[16]=j/percision+1/percision
                             theVs[17]=k/percision
 
-                            point0= "vertex " + str(theVs[0]) + " " + str(theVs[1])+ " " + str(theVs[2])
-                            point1= "vertex " + str(theVs[3])+ " " + str(theVs[4])+ " " + str(theVs[5])
-                            point2= "vertex " + str(theVs[6])+ " " + str(theVs[7])+ " " + str(theVs[8])
-                            point3= "vertex " + str(theVs[9])+ " " + str(theVs[10])+ " " + str(theVs[11])
-                            point4= "vertex " + str(theVs[12])+ " " + str(theVs[13])+ " " + str(theVs[14])
-                            point5= "vertex " + str(theVs[15])+ " " + str(theVs[16])+ " " + str(theVs[17])
-
-                                
-                            #export.write("facet normal 0 0 0" + '\n');
-                            #export.write("outer loop" + '\n');                            
-                            #export.write(str(point0) + '\n');
-                            #export.write(str(point1) + '\n');
-                            #export.write(str(point2) + '\n');
-                            #export.write(eloop + '\n');
-                            #export.write(endfacet + '\n');
-                            #export.write("facet normal 0 0 0" + '\n');
-                            #export.write("outer loop" + '\n');                            
-                            #export.write(str(point3) + '\n');
-                            #export.write(str(point4) + '\n');
-                            #export.write(str(point5) + '\n');
-                            #export.write(eloop + '\n');
-                            #export.write(endfacet + '\n');
-                            #export.write('\n');
+                            #points()
 
 
 
@@ -723,30 +680,7 @@ while (isopen==1):
                                 theVs[16]=j/percision+1/percision
                                 theVs[17]=k/percision
 
-                                point0= "vertex " + str(theVs[0]) + " " + str(theVs[1])+ " " + str(theVs[2])
-                                point1= "vertex " + str(theVs[3])+ " " + str(theVs[4])+ " " + str(theVs[5])
-                                point2= "vertex " + str(theVs[6])+ " " + str(theVs[7])+ " " + str(theVs[8])
-                                point3= "vertex " + str(theVs[9])+ " " + str(theVs[10])+ " " + str(theVs[11])
-                                point4= "vertex " + str(theVs[12])+ " " + str(theVs[13])+ " " + str(theVs[14])
-                                point5= "vertex " + str(theVs[15])+ " " + str(theVs[16])+ " " + str(theVs[17])
-
-                                
-                                export.write(facetn + '\n');
-                                export.write(oloop + '\n');                            
-                                export.write(str(point0) + '\n');
-                                export.write(str(point1) + '\n');
-                                export.write(str(point2) + '\n');
-                                export.write(eloop + '\n');
-                                export.write(endfacet + '\n');
-                                export.write(facetn + '\n');
-                                export.write(oloop + '\n');                            
-                                export.write(str(point3) + '\n');
-                                export.write(str(point4) + '\n');
-                                export.write(str(point5) + '\n');
-                                export.write(eloop + '\n');
-                                export.write(endfacet + '\n');
-                                export.write('\n');
-
+                                points()
     
                             if (space[(k)*(boundaryY*boundaryX)+(j)*(boundaryX)+i+1] == u"\u25A1"  or i == boundaryX-1):
                                 #Triangle R1
@@ -774,30 +708,8 @@ while (isopen==1):
                                 theVs[16]=j/percision
                                 theVs[17]=k/percision
 
-                                point0= "vertex " + str(theVs[0]) + " " + str(theVs[1])+ " " + str(theVs[2])
-                                point1= "vertex " + str(theVs[3])+ " " + str(theVs[4])+ " " + str(theVs[5])
-                                point2= "vertex " + str(theVs[6])+ " " + str(theVs[7])+ " " + str(theVs[8])
-                                point3= "vertex " + str(theVs[9])+ " " + str(theVs[10])+ " " + str(theVs[11])
-                                point4= "vertex " + str(theVs[12])+ " " + str(theVs[13])+ " " + str(theVs[14])
-                                point5= "vertex " + str(theVs[15])+ " " + str(theVs[16])+ " " + str(theVs[17])
-
+                                points()
                                 
-                                export.write(facetn + '\n');
-                                export.write(oloop + '\n');                            
-                                export.write(str(point0) + '\n');
-                                export.write(str(point1) + '\n');
-                                export.write(str(point2) + '\n');
-                                export.write(eloop + '\n');
-                                export.write(endfacet + '\n');
-                                export.write(facetn + '\n');
-                                export.write(oloop + '\n');                            
-                                export.write(str(point3) + '\n');
-                                export.write(str(point4) + '\n');
-                                export.write(str(point5) + '\n');
-                                export.write(eloop + '\n');
-                                export.write(endfacet + '\n');
-                                export.write('\n');
-
                             if (space[(k)*(boundaryY*boundaryX)+(j-1)*(boundaryX)+i] == u"\u25A1"  or j == 0):
                                 #Triangle Top1
                                 theVs[0]=i/percision+1/percision
@@ -824,29 +736,7 @@ while (isopen==1):
                                 theVs[16]=j/percision
                                 theVs[17]=k/percision
 
-                                point0= "vertex " + str(theVs[0]) + " " + str(theVs[1])+ " " + str(theVs[2])
-                                point1= "vertex " + str(theVs[3])+ " " + str(theVs[4])+ " " + str(theVs[5])
-                                point2= "vertex " + str(theVs[6])+ " " + str(theVs[7])+ " " + str(theVs[8])
-                                point3= "vertex " + str(theVs[9])+ " " + str(theVs[10])+ " " + str(theVs[11])
-                                point4= "vertex " + str(theVs[12])+ " " + str(theVs[13])+ " " + str(theVs[14])
-                                point5= "vertex " + str(theVs[15])+ " " + str(theVs[16])+ " " + str(theVs[17])
-
-                                
-                                export.write(facetn + '\n');
-                                export.write(oloop + '\n');                            
-                                export.write(str(point0) + '\n');
-                                export.write(str(point1) + '\n');
-                                export.write(str(point2) + '\n');
-                                export.write(eloop + '\n');
-                                export.write(endfacet + '\n');
-                                export.write(facetn + '\n');
-                                export.write(oloop + '\n');                            
-                                export.write(str(point3) + '\n');
-                                export.write(str(point4) + '\n');
-                                export.write(str(point5) + '\n');
-                                export.write(eloop + '\n');
-                                export.write(endfacet + '\n');
-                                export.write('\n');
+                                points()
 
                             if (space[(k)*(boundaryY*boundaryX)+(j+1)*(boundaryX)+i] == u"\u25A1"  or j == boundaryY-1):
                                 #Triangle Bottom1
@@ -874,29 +764,7 @@ while (isopen==1):
                                 theVs[16]=j/percision+1/percision
                                 theVs[17]=k/percision
 
-                                point0= "vertex " + str(theVs[0]) + " " + str(theVs[1])+ " " + str(theVs[2])
-                                point1= "vertex " + str(theVs[3])+ " " + str(theVs[4])+ " " + str(theVs[5])
-                                point2= "vertex " + str(theVs[6])+ " " + str(theVs[7])+ " " + str(theVs[8])
-                                point3= "vertex " + str(theVs[9])+ " " + str(theVs[10])+ " " + str(theVs[11])
-                                point4= "vertex " + str(theVs[12])+ " " + str(theVs[13])+ " " + str(theVs[14])
-                                point5= "vertex " + str(theVs[15])+ " " + str(theVs[16])+ " " + str(theVs[17])
-
-                                
-                                export.write(facetn + '\n');
-                                export.write(oloop + '\n');                            
-                                export.write(str(point0) + '\n');
-                                export.write(str(point1) + '\n');
-                                export.write(str(point2) + '\n');
-                                export.write(eloop + '\n');
-                                export.write(endfacet + '\n');
-                                export.write(facetn + '\n');
-                                export.write(oloop + '\n');                            
-                                export.write(str(point3) + '\n');
-                                export.write(str(point4) + '\n');
-                                export.write(str(point5) + '\n');
-                                export.write(eloop + '\n');
-                                export.write(endfacet + '\n');
-                                export.write('\n');
+                                points()
 
 
                             
@@ -998,7 +866,7 @@ while (isopen==1):
             print("Enter Inner Diameter")
             operation[0]=input()
             operation[0]=int(operation[0])
-            print("Enter Outter Diameter")
+            print("Enter Outer Diameter")
             operation[4]=input()
             operation[4]=int(operation[4])
             print("Enter mm between threads")
