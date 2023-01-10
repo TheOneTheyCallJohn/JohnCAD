@@ -604,10 +604,10 @@ while (isopen==1):
                     compressor[2] = -1
                     for i in range (0, int(boundaryX)):
                         #Bottom
-                        if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A0" and space[(k)*(boundaryY*boundaryX)+(j-1)*(boundaryX)+i] == u"\u25A1" and +(space[(k)*(boundaryY*boundaryX)+j*(boundaryX)+i-1] == u"\u25A1" or i == 0)):
+                        if (space[k*(boundaryZ*boundaryX)+j*(boundaryZ)+i] == u"\u25A0" and space[(k)*(boundaryZ*boundaryX)+(j-1)*(boundaryZ)+i] == u"\u25A1" and +(space[(k)*(boundaryY*boundaryX)+j*(boundaryX)+i-1] == u"\u25A1" or i == 0)):
                             compressor[0]=k
                             compressor[1]=i
-                        if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A0" and space[(k)*(boundaryY*boundaryX)+(j-1)*(boundaryX)+(i)] != u"\u25A0" and space[(k)*(boundaryY*boundaryX)+j*(boundaryX)+(i+1)] == u"\u25A1" and (space[(k)*(boundaryY*boundaryX)+j*(boundaryX)+i+1] == u"\u25A1" or i == boundaryX-1)):
+                        if (space[k*(boundaryZ*boundaryX)+j*(boundaryZ)+i] == u"\u25A0" and space[(k)*(boundaryZ*boundaryX)+(j-1)*(boundaryZ)+(i)] != u"\u25A0" and space[(k)*(boundaryY*boundaryX)+j*(boundaryX)+(i+1)] == u"\u25A1" and (space[(k)*(boundaryY*boundaryX)+j*(boundaryX)+i+1] == u"\u25A1" or i == boundaryX-1)):
                             compressor[2]=i+1
                         if compressor[0] != -1 and compressor[1] != -1 and compressor[2]!= -1:
                             #print('test')
