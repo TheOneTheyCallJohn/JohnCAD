@@ -1,5 +1,22 @@
 import os
 import math
+import pygame
+
+            #Pygame window
+pygame.init()
+wireframedisplayX=1500
+wireframedisplayY=750
+#wn=pygame.display.set_mode((wn_width,wn_height))
+#pygame.display.set_caption("Drawing")
+
+#state=True
+#while state:
+#    for event in pygame.event.get():
+#        if event.type==pygame.QUIT:
+#            state=False
+                        
+#    pygame.display.update()
+
 
 mode="stockselect";
 selection = 0;
@@ -54,6 +71,12 @@ footer = "endsolid MadeWithJohncad";
 percision = 1;
 
 
+
+#Drawing
+Edge = (255,255,255)
+Corner = (255,0,0)
+Background = (0,0,255)
+
 #Finally going to define some functions
 def points():
     point0= "vertex " + str(theVs[0]) + " " + str(theVs[1])+ " " + str(theVs[2])
@@ -79,8 +102,14 @@ def points():
     export.write(endfacet + '\n');
     export.write('\n');
 
+def coord(k,j,i):
+    coord = (k)*(boundaryX*boundaryY)+(j)*(boundaryY)+i
 
-
+def displaysetup():
+    wireframedisplay=pygame.display.set_mode((wireframedisplayX,wireframedisplayY))
+    pygame.display.set_caption("JohnCAD")
+    wireframedisplay.fill(Background)
+    displayscale=(750/boundaryY)/2
 
 
 while (isopen==1):
@@ -202,10 +231,10 @@ while (isopen==1):
                         if math.sqrt((i+.5-((boundaryX)/2))**2+(j+.5-((boundaryY)/2))**2) <= (data[0]*percision)/2:
                             space[(k)*(boundaryX*boundaryY)+(j)*(boundaryY)+i]=u"\u25A0";
                             data[2]=data[2]+1
-                        #elif math.sqrt((i+.5-((boundaryX)/2))**2+(j+.5-((boundaryY)/2))**2) > (data[0]*percision)/2 and math.sqrt((i+.5-((boundaryX)/2))**2+(j+.5-((boundaryY)/2))**2) < (data[0]*percision)/2+1:
-                            #space[(k)*(boundaryX*boundaryY)+(j)*(boundaryY)+i]=u"\u25A2";
+                        elif math.sqrt((i+.5-((boundaryX)/2))**2+(j+.5-((boundaryY)/2))**2) > (data[0]*percision)/2 and math.sqrt((i+.5-((boundaryX)/2))**2+(j+.5-((boundaryY)/2))**2) < (data[0]*percision)/2+.8:
+                            space[(k)*(boundaryX*boundaryY)+(j)*(boundaryY)+i]=u"\u25A2";
                             
-                        elif math.sqrt((i+.5-((boundaryX)/2))**2+(j+.5-((boundaryY)/2))**2) > (data[0]*percision)/2:
+                        elif math.sqrt((i+.5-((boundaryX)/2))**2+(j+.5-((boundaryY)/2))**2) > (data[0]*percision)/2+.8:
                             space[(k)*(boundaryX*boundaryY)+(j)*(boundaryY)+i]=u"\u25A1";
                             
     #Barstock deatils   
@@ -267,6 +296,11 @@ while (isopen==1):
         command = input();
         
         if (command == "D" or command == "d"):
+            #Pygame window
+
+
+
+            
             #Starting with generating the Front :)
             for i in range (0, int(data[0]*percision)):
                 for j in range (0, int(data[1]*percision*data[2]*percision)):
@@ -308,7 +342,10 @@ while (isopen==1):
                 print("");
 
             print("");
-        
+            
+
+
+            
         if (command == "E" or command == "e"):
             export = open('export.txt', 'w');
             export.write(header + '\n');
@@ -341,36 +378,12 @@ while (isopen==1):
         #Display
         if (command == "D" or command == "d"):
 
-            #Detect Openspaces around (Rework generation and delete this part)
-#            for k in range(0, int(boundaryZ)*percision):
-#                for j in range(0, int(boundaryY)*percision):
-#                    for i in range(0, int(boundaryX)*percision):
-#                        openl[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=0;
-#                        openr[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=0;
-#                        openb[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=0;
-#                        opent[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=0;
-#                        opena[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=0;
-#                        openf[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=0;
 
-                            
-#                        if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A0"):
-#                            if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+(i-1)]) == u"\u25A1" or i == 0:
-#                                openl[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=1;
-#                            if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+(i+1)]) == u"\u25A1" or i == boundaryX-1:
-#                                openr[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=1;
-#                                
-#                            if (space[k*(boundaryY*boundaryX)+(j-1)*(boundaryX)+i]) == u"\u25A1" or j == 0:
-#                                openb[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=1;
-#                            if (space[k*(boundaryY*boundaryX)+(j+1)*(boundaryX)+i]) == u"\u25A1" or j == boundaryY-1:
-#                                opent[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=1;
-#                                
-#                            if (space[(k-1)*(boundaryY*boundaryX)+j*(boundaryX)+i]) == u"\u25A1" or k == 0:
-#                                openf[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=1;
-#                            if (space[(k+1)*(boundaryY*boundaryX)+j*(boundaryX)+i]) == u"\u25A1" or k == boundaryZ-1:
-#                                opena[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=1;
-
-
-
+            #Window Output
+            wireframedisplay=pygame.display.set_mode((wireframedisplayX,wireframedisplayY))
+            pygame.display.set_caption("Face Wireframes")
+            wireframedisplay.fill(Background)
+            displayscale=(750/boundaryY)/2
 
             for k in range(0, int(boundaryZ)*percision):
                 for j in range(0, int(boundaryY)*percision):
@@ -379,23 +392,16 @@ while (isopen==1):
                         top[int(k*(boundaryX*percision))+i] = u"\u25A1"
                         right[int(k*(boundaryX*percision))+j] = u"\u25A1"
 
-
-
             #Generate Top
             for k in range(0, int(boundaryZ)*percision):
                 for j in range(0, int(boundaryY)*percision):
                     for i in range(0, int(boundaryX)*percision):
                         if space[int(k*(boundaryX*boundaryY*percision)+j*(boundaryX*percision))+i] == u"\u25A0":
                             top[int(k*(boundaryX*percision))+i] = u"\u25A0"
+                            pygame.draw.rect(wireframedisplay,Edge,(i*displayscale,j*displayscale,1*displayscale,1*displayscale))
                         if top[int(k*(boundaryX*percision))+i] != u"\u25A0" and space[int(k*(boundaryX*boundaryY*percision)+j*(boundaryX*percision))+i] == u"\u25A1":
                             top[int(k*(boundaryX*percision))+i] = u"\u25A1"
-            #Draw Top
-            print("Top")
-            for i in range(0, int(boundaryZ)*percision):
-                for j in range(0, int(boundaryX)*percision):
-                    print(top[int(i*(boundaryY*percision))+j], "" ,end = "")
-                print("")
-
+                            
             #Generate Front
             for k in range(0, int(boundaryZ)*percision):
                 for j in range(0, int(boundaryY)*percision):
@@ -423,38 +429,8 @@ while (isopen==1):
                         if right[int(k*(boundaryX*percision))+j] != u"\u25A0" and space[int(k*(boundaryX*boundaryY*percision)+j*(boundaryX*percision))+i] == u"\u25A1":
                             right[int(k*(boundaryX*percision))+j] = u"\u25A1"
 
-
                             
-            #Draw Front and Right
-
-
-            print("Front", "                   ", "Right")
-            for i in range(0, int(boundaryY)*percision):
-                for j in range(0, int(boundaryX)*percision):
-                    print(front[int(i*(boundaryX*percision))+j], "" ,end = "")
-                print(" ",end = "")
-                for k in range(0, int(boundaryZ)*percision):
-                    print(right[int(k*(boundaryY*percision))+i], "" ,end = "")
-                print("")
-
-            
-#            print("Front")
-#            for i in range(0, int(boundaryY)*percision):
-#                for j in range(0, int(boundaryX)*percision):
-#                    print(front[int(i*(boundaryX*percision))+j], "" ,end = "")
-#                print("")
-
-
-
-
-            #Draw Right
-#            print("Right")
-#            for i in range(0, int(boundaryX)*percision):
-#                for j in range(0, int(boundaryZ)*percision):
-#                    print(right[int(j*(boundaryY*percision))+i], "" ,end = "")
-#                print("")
-                            
-
+            pygame.display.update()
                         
         #Full Layered Display
         if (command == "H" or command == "h"):
@@ -513,6 +489,17 @@ while (isopen==1):
 #                            if (space[(k+1)*(boundaryY*boundaryX)+j*(boundaryX)+i]) == u"\u25A1":
 #                                opent[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=1;
 #                                opens[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=opens[k*(boundaryY*boundaryX)+j*(boundaryX)+i]+1
+
+
+
+
+            #Rounded Edges
+            for k in range (0, int(boundaryZ)):
+                for j in range (0,int(boundaryY)):
+                    for i in range (0, int(boundaryX)):            
+                         if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A2"):
+                             h=1
+
 
             #Compress STLS and hopefuflly make it run faster
             #Bottom Compression
@@ -597,53 +584,84 @@ while (isopen==1):
 
 
 #Going to have two more of these loops for the time being, for left right, and top down
-            for j in range (0,int(boundaryY)):
-                for k in range (0, int(boundaryZ)):
+            for k in range (0, int(boundaryY)):
+                for j in range (0,int(boundaryX)):
                     compressor[0] = -1
                     compressor[1] = -1
                     compressor[2] = -1
-                    for i in range (0, int(boundaryX)):
-                        #Bottom
-                        if (space[k*(boundaryZ*boundaryX)+j*(boundaryZ)+i] == u"\u25A0" and space[(k)*(boundaryZ*boundaryX)+(j-1)*(boundaryZ)+i] == u"\u25A1" and +(space[(k)*(boundaryY*boundaryX)+j*(boundaryX)+i-1] == u"\u25A1" or i == 0)):
-                            compressor[0]=k
-                            compressor[1]=i
-                        if (space[k*(boundaryZ*boundaryX)+j*(boundaryZ)+i] == u"\u25A0" and space[(k)*(boundaryZ*boundaryX)+(j-1)*(boundaryZ)+(i)] != u"\u25A0" and space[(k)*(boundaryY*boundaryX)+j*(boundaryX)+(i+1)] == u"\u25A1" and (space[(k)*(boundaryY*boundaryX)+j*(boundaryX)+i+1] == u"\u25A1" or i == boundaryX-1)):
-                            compressor[2]=i+1
-                        if compressor[0] != -1 and compressor[1] != -1 and compressor[2]!= -1:
-                            #print('test')
-                                #Triangle Bottom1
-                            theVs[0]=i/percision+1/percision
+                    compressor[3] = -1
+                    for i in range (0, int(boundaryZ)):
+                        #if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A0" and space[(k-1)*(boundaryY*boundaryX)+j*(boundaryX)+i] != u"\u25A0" and compressor[0] == -1):
+                            #compressor[0]=i
+                        #if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A0" and (space[(k-1)*(boundaryY*boundaryX)+j*(boundaryX)+i+1] == u"\u25A0" or space[(k)*(boundaryY*boundaryX)+j*(boundaryX)+i+1] != u"\u25A0" or i==boundaryX-1) and compressor[0] != -1 and compressor[1] == -1):
+                            #compressor[1]=i+1
+                        if compressor[0] != -1 and compressor[1] != -1:
+                            #Triangle RealBottom1
+                            theVs[0]=compressor[0]/percision
                             theVs[1]=j/percision+1/percision
-                            theVs[2]=compressor[0]/percision
+                            theVs[2]=k/percision
 
-                            theVs[3]=i/percision
-                            theVs[4]=j/percision+1/percision
-                            theVs[5]=k/percision+1/percision
+                            theVs[3]=compressor[1]/percision
+                            theVs[4]=j/percision
+                            theVs[5]=k/percision
 
-                            theVs[6]=i/percision+1/percision
-                            theVs[7]=j/percision+1/percision
-                            theVs[8]=k/percision+1/percision
-                                #Triangle Bottom2
-                            theVs[9]=i/percision
-                            theVs[10]=j/percision+1/percision
-                            theVs[11]=compressor[0]/percision
+                            theVs[6]=compressor[0]/percision
+                            theVs[7]=j/percision
+                            theVs[8]=k/percision
+                            #Triangle RealBottom2
+                            theVs[9]=compressor[1]/percision
+                            theVs[10]=j/percision
+                            theVs[11]=k/percision
 
-                            theVs[12]=i/percision
+                            theVs[12]=compressor[0]/percision
                             theVs[13]=j/percision+1/percision
-                            theVs[14]=k/percision+1/percision
-
-                            theVs[15]=i/percision+1/percision
+                            theVs[14]=k/percision
+    
+                            theVs[15]=compressor[1]/percision
                             theVs[16]=j/percision+1/percision
                             theVs[17]=k/percision
-
+                            
                             #points()
-
-
-
 
                             compressor[0]=-1
                             compressor[1]=-1
+
+                        #Front
+                        #if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A0" and space[(k+1)*(boundaryY*boundaryX)+j*(boundaryX)+i] != u"\u25A0" and compressor[2] == -1):
+                            #compressor[2]=i
+                        #if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A0" and (space[(k+1)*(boundaryY*boundaryX)+j*(boundaryX)+i+1] == u"\u25A0" or space[(k)*(boundaryY*boundaryX)+j*(boundaryX)+i+1] != u"\u25A0" or i==boundaryX-1) and compressor[2] != -1 and compressor[3] == -1):
+                            #compressor[3]=i+1
+                        if compressor[2] != -1 and compressor[3] != -1:
+                            #Triangle RealTop1
+                            theVs[0]=compressor[2]/percision
+                            theVs[1]=j/percision+1/percision
+                            theVs[2]=k/percision+1/percision
+
+                            theVs[3]=compressor[2]/percision
+                            theVs[4]=j/percision
+                            theVs[5]=k/percision+1/percision
+                            
+                            theVs[6]=compressor[3]/percision
+                            theVs[7]=j/percision
+                            theVs[8]=k/percision+1/percision
+                            
+                            #Triangle Top2
+                            theVs[9]=compressor[2]/percision
+                            theVs[10]=j/percision+1/percision
+                            theVs[11]=k/percision+1/percision
+                            
+                            theVs[12]=compressor[3]/percision
+                            theVs[13]=j/percision
+                            theVs[14]=k/percision+1/percision
+
+                            theVs[15]=compressor[3]/percision
+                            theVs[16]=j/percision+1/percision
+                            theVs[17]=k/percision+1/percision
+                            
+                            #points()
+                                
                             compressor[2]=-1
+                            compressor[3]=-1
 
 
                         
@@ -801,7 +819,7 @@ while (isopen==1):
             mode = "MillOperations"
 
         if (command == "T" or command =="t"):
-            mode = "DrillToolOperations"
+            mode = "DrillOperations"
 
     if (mode == "LatheOperations"):
         print("Operations >>> Lathe Operations")
@@ -879,7 +897,7 @@ while (isopen==1):
             operation[1]=input()
             operation[1]=int(operation[1])
             for k in range (int(operation[2]), int(operation[1])):
-                angle=(k%operation[3])/operation[3]*360
+                angle=-(k%operation[3])/operation[3]*360
                 t1=(operation[4]-operation[0])*math.sin(angle*math.pi/180)
                 t2=(operation[4]-operation[0])*math.cos(angle*math.pi/180)
                 
@@ -958,7 +976,7 @@ while (isopen==1):
                         if (abs(j-operation[3]) < operation[0]/2):
                             space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] = u"\u25A1"
 
-    #Hand tools                    
+    #Drill                    
     if (mode == "DrillOperations"):
         drill[0]=0
         drill[1]=0
