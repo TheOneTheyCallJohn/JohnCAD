@@ -1,21 +1,18 @@
+#It dosent work anymore, But I am making progress
+
 import os
 import math
 import pygame
+import tkinter as tk
 
-            #Pygame window
+#Pygame window
 pygame.init()
 wireframedisplayX=1500
 wireframedisplayY=750
-#wn=pygame.display.set_mode((wn_width,wn_height))
-#pygame.display.set_caption("Drawing")
-
-#state=True
-#while state:
-#    for event in pygame.event.get():
-#        if event.type==pygame.QUIT:
-#            state=False
-                        
-#    pygame.display.update()
+#Drawing
+Edge = (255,255,255)
+Corner = (255,0,0)
+Background = (0,0,255)
 
 
 mode="stockselect";
@@ -72,10 +69,7 @@ percision = 1;
 
 
 
-#Drawing
-Edge = (255,255,255)
-Corner = (255,0,0)
-Background = (0,0,255)
+
 
 #Finally going to define some functions
 def points():
@@ -111,37 +105,89 @@ def displaysetup():
     wireframedisplay.fill(Background)
     displayscale=(750/boundaryY)/2
 
+selection = 1
+stock="SheetMetal"
+
+
+
+
+
+
+
+
+def sm():
+    stock= "SheetMetal"
+    print(stock)
+def bs():
+    stock= "BarStock"
+    print(stock)
+def rs():
+    stock= "RoundStock"
+    print(stock)
+def p1():
+    percision = 1
+    print(percision)
+def p2():
+    percision = 10
+    print(percision)
+def p3():
+    percision = 100
+    print(percision)
+def gen():
+    genWindow.destroy()
+            
+
+
+        
+genWindow = tk.Tk()
+genWindow.title("JohnCAD Stock Generation")
+genWindow.geometry("350x250")
+        
+tk.Label(genWindow, text="Stock Type:").grid(row=0, column=0)
+tk.Radiobutton(genWindow, text="Sheet Metal ", command = sm, variable = 0, value = 0).grid(row=1, column=0)
+tk.Radiobutton(genWindow, text="Bar Stock", command = bs, variable = 0, value = 1).grid(row=2, column=0)
+tk.Radiobutton(genWindow, text="Round Stock     ", command = rs, variable = 0, value = 2).grid(row=3, column=0)
+
+tk.Label(genWindow, text="Precision:").grid(row=0, column=1)
+tk.Radiobutton(genWindow, text="1/1 mm", command = p1, variable = 1, value = 0).grid(row=1, column=1)
+tk.Radiobutton(genWindow, text="1/10mm", command = p2, variable = 1, value = 1).grid(row=2, column=1)
+tk.Radiobutton(genWindow, text="1/100mm     ", command = p3, variable = 1, value = 2).grid(row=3, column=1)
+        
+tk.Label(genWindow, text="Dimensions, Leave Y blank for Y").grid(row=4, column=0)
+if stock == "SheetMetal":
+    tk.Label(genWindow, text="Width X").grid(row=5, column=0)
+    tk.Label(genWindow, text="Length Y", selectbackground = ).grid(row=6, column=0)
+    tk.Label(genWindow, text="Height Z").grid(row=7, column=0)
+tk.Entry(genWindow).grid(row=5,column=1)
+tk.Entry(genWindow).grid(row=6,column=1)
+tk.Entry(genWindow).grid(row=7,column=1)
+
+tk.Button(genWindow, text="Generate!", command = gen).grid(row=8, column=0)
+genWindow.mainloop()
+
+
+
+
+
+
+
+
+
+
+
 
 while (isopen==1):
 
-    if (mode=="stockselect"):
-        print("Select Stock:");
-        print("'S' SheetMetal Comming Soon");
-        print("'B' Flat Bar Stock");
-        print("'R' RoundStock");
-        print("'W' Weld Comming Soon");
-        print("'P' Percision Select Currently 1/", percision, "mm")
-        command = input();
-        
-        if (command == "S" or command == "s"):
-            stock="SheetMetal";
-            mode="Sdetails";
-        if (command == "B" or command == "b"):
-            stock="Barstock";
-            mode="Bdetails";
-        if (command == "R" or command == "r"):
-            stock="Roundstock";
-            mode="Rdetails";
-        if (command=="C"):
-            stock="Cast";
-            mode="Cdetails";
-        if (command == "P" or command == "p"):
-            print("Enter Percision in 1/x mm, should probably be 1 for now")
-            percision = int(input())
 
 
 
 
+    print(stock)
+    print(percision)
+    print('hi')
+
+
+    command = input()
     if (mode=="Sdetails"):
         while (selection==0):
             print("Enter Thickness (Z):");
