@@ -2,8 +2,11 @@ import os
 import math
 import pygame
 import tkinter as tk
-import Generate
 
+#Other Files/Functions, Export not required as of now
+import Generate
+import Export
+import Simple #Simple often repeated functions
 #Pygame window
 pygame.init()
 wireframedisplayX=1500
@@ -95,8 +98,6 @@ def points():
     export.write(endfacet + '\n');
     export.write('\n');
 
-def coord(k,j,i):
-    coord = (k)*(boundaryX*boundaryY)+(j)*(boundaryY)+i
 
 def displaysetup():
     wireframedisplay=pygame.display.set_mode((wireframedisplayX,wireframedisplayY))
@@ -104,104 +105,26 @@ def displaysetup():
     wireframedisplay.fill(Background)
     displayscale=(750/boundaryY)/2
 
-selection = 1
+#These variables are in two different, files, they are temp/default
+global x
+global y
+global z
 stock="SheetMetal"
-
-
-
-
 x=15
 y=10
 z=5
 
+
+data[2]=5
+data[1]=10
+data[0]=15
+
 #TIL "percision" is not spelled like that
 
-Generate.generate()
-
-
-
-
+Generate.generate(data,x,y,z,stock,percision,space)
 
 
 while (isopen==1):
-
-
-
-    print(x)
-    print(stock)
-    print(percision)
-
-
-    if (stock=="SheetMetal"):
-        print("Thickness, Width, Height")
-        print(data[0],'mm',data[1],'mm',data[2],'mm');
-
-#Ok, this is to assist the Z value to ensure there are enough blank spaces.
-        x=data[1];
-        if (data[2] > data[1]):
-            x = data[2];
-        command = input("Press Enter To Generate");
-        spacesize=int((data[0]*percision)*(data[1]*percision)*(data[2]*percision) + (data[1]*percision)*(data[2]*percision)*(x*percision))
-#Generation code, just makes everything material withen the XYZ, also creates open space above it.
-        for i in range(0, spacesize):
-            if (i < int(data[0]*percision)*(data[1]*percision)*(data[2]*percision)):
-                space[i]=u"\u25A0";
-            if (i >= int(data[0]*percision)*(data[1]*percision)*(data[2]*percision)):
-                space[i]=u"\u25A1";
-        print(len(space));
-        print((data[0]*percision)*(data[1]*percision)*(data[2]*percision));
-
-
-    #RoundStockGeneration
-    if (stock== "RoundStock"):
-        print("Diameter, Length");
-        print(data[0], 'mm' ,data[1], 'mm');
-        command = input("Press Enter To Generate");
-        for k in range (-1, 0):
-            for j in range (0, int(boundaryY)):
-                for i in range (0, int(boundaryX)):
-                    space[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=u"\u25A1";
-        for k in range (int(boundaryZ), int(boundaryZ)+2):
-            for j in range (0, int(boundaryY)):
-                for i in range (0, int(boundaryX)):
-                    space[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=u"\u25A1";
-        data[2]=0
-
-
-        if data[0]%2==1 or 1 == 1:
-            for k in range (0, int(boundaryZ)):
-                for j in range (0, int(boundaryY)):
-                    for i in range (0, int(boundaryX)):
-                        if math.sqrt((i+.5-((boundaryX)/2))**2+(j+.5-((boundaryY)/2))**2) <= (data[0]*percision)/2:
-                            space[(k)*(boundaryX*boundaryY)+(j)*(boundaryY)+i]=u"\u25A0";
-                            data[2]=data[2]+1
-                        elif math.sqrt((i+.5-((boundaryX)/2))**2+(j+.5-((boundaryY)/2))**2) > (data[0]*percision)/2 and math.sqrt((i+.5-((boundaryX)/2))**2+(j+.5-((boundaryY)/2))**2) < (data[0]*percision)/2+.8:
-                            space[(k)*(boundaryX*boundaryY)+(j)*(boundaryY)+i]=u"\u25A2";
-                            
-                        elif math.sqrt((i+.5-((boundaryX)/2))**2+(j+.5-((boundaryY)/2))**2) > (data[0]*percision)/2+.8:
-                            space[(k)*(boundaryX*boundaryY)+(j)*(boundaryY)+i]=u"\u25A1";
-                            
-    #Barstock deatils   
-    if (stock=="BarStock"):
-        mode = "StockOperations"
-        for k in range (-1, 0):
-            for j in range (0, int(boundaryY)):
-                for i in range (0, int(boundaryX)):
-                    space[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=u"\u25A1";
-        for k in range (int(boundaryZ), int(boundaryZ)+2):
-            for j in range (0, int(boundaryY)):
-                for i in range (0, int(boundaryX)):
-                    space[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=u"\u25A1";
-        for k in range (0, int(boundaryZ)*percision):
-            for j in range (0, int(boundaryY)*percision):
-                for i in range (0, int(boundaryX)*percision):
-                    space[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=u"\u25A0";
-        print("Thickness, Width, Height")
-        print(data[0],'mm',data[1],'mm',data[2],'mm');
-
-
-
-
     #Sheetmetal operations
     if (mode=="SheetOperations"):
         print("Operations Menu:");
@@ -215,7 +138,6 @@ while (isopen==1):
         command = input();
         
         if (command == "D" or command == "d"):
-            #Pygame window
 
 
 
@@ -366,347 +288,7 @@ while (isopen==1):
                     
         #Export
         if (command == "E" or command == "e"):
-            exportname = input('Enter File Name')
-            exportname = exportname + ".stl"
-            export = open(exportname, 'w');
-            export.write(header + '\n');
-            #Identify which blocks are adjacent to open space (Delete soon)
-            #for k in range (0, int(boundaryZ)):
-            #    for j in range (0,int(boundaryY)):
-            #        for i in range (0, int(boundaryX)):
-            #            stlprep[k*(boundaryY*boundaryX)+j*(boundaryX)+i] = space[k*(boundaryY*boundaryX)+j*(boundaryX)+i];
-            #            openl[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=0;
-            #            openr[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=0;
-            #            opena[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=0;
-            #            openf[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=0;
-            #            openb[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=0;
-            #            opent[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=0;
-            #            opens[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=0;
-                        
-                        
-            #for k in range (0, int(boundaryZ)):
-            #    for j in range (0,int(boundaryY)):
-            #        for i in range (0, int(boundaryX)):
-            #            stlprep[k*(boundaryY*boundaryX)+j*(boundaryX)+i] = space[k*(boundaryY*boundaryX)+j*(boundaryX)+i];
-            #            if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A0"):
-
-#                            if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+(i-1)]) == u"\u25A1":
-#                                openl[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=1;
-#                                opens[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=opens[k*(boundaryY*boundaryX)+j*(boundaryX)+i]+1
-#                            if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+(i+1)]) == u"\u25A1":
-#                                openr[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=1;
-#                                opens[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=opens[k*(boundaryY*boundaryX)+j*(boundaryX)+i]+1
-#                            if (space[k*(boundaryY*boundaryX)+(j-1)*(boundaryX)+i]) == u"\u25A1":
-#                                opena[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=1;
-#                                opens[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=opens[k*(boundaryY*boundaryX)+j*(boundaryX)+i]+1
-#                            if (space[k*(boundaryY*boundaryX)+(j+1)*(boundaryX)+i]) == u"\u25A1":
-#                                openf[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=1;
-#                                opens[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=opens[k*(boundaryY*boundaryX)+j*(boundaryX)+i]+1
-#                            if (space[(k-1)*(boundaryY*boundaryX)+j*(boundaryX)+i]) == u"\u25A1":
-#                                openb[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=1;
-#                                opens[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=opens[k*(boundaryY*boundaryX)+j*(boundaryX)+i]+1
-#                            if (space[(k+1)*(boundaryY*boundaryX)+j*(boundaryX)+i]) == u"\u25A1":
-#                                opent[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=1;
-#                                opens[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=opens[k*(boundaryY*boundaryX)+j*(boundaryX)+i]+1
-
-
-
-
-            #Rounded Edges
-            for k in range (0, int(boundaryZ)):
-                for j in range (0,int(boundaryY)):
-                    for i in range (0, int(boundaryX)):            
-                         if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A2"):
-                             h=1
-
-
-            #Compress STLS and hopefuflly make it run faster
-            #Bottom Compression
-            for k in range (0, int(boundaryZ)):
-                for j in range (0,int(boundaryY)):
-                    compressor[0] = -1
-                    compressor[1] = -1
-                    compressor[2] = -1
-                    compressor[3] = -1
-                    for i in range (0, int(boundaryX)):
-                        if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A0" and space[(k-1)*(boundaryY*boundaryX)+j*(boundaryX)+i] != u"\u25A0" and compressor[0] == -1):
-                            compressor[0]=i
-                        if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A0" and (space[(k-1)*(boundaryY*boundaryX)+j*(boundaryX)+i+1] == u"\u25A0" or space[(k)*(boundaryY*boundaryX)+j*(boundaryX)+i+1] != u"\u25A0" or i==boundaryX-1) and compressor[0] != -1 and compressor[1] == -1):
-                            compressor[1]=i+1
-                        if compressor[0] != -1 and compressor[1] != -1:
-                            #Triangle RealAft1
-                            theVs[0]=compressor[0]/percision
-                            theVs[1]=j/percision+1/percision
-                            theVs[2]=k/percision
-
-                            theVs[3]=compressor[1]/percision
-                            theVs[4]=j/percision
-                            theVs[5]=k/percision
-
-                            theVs[6]=compressor[0]/percision
-                            theVs[7]=j/percision
-                            theVs[8]=k/percision
-                            #Triangle RealAft2
-                            theVs[9]=compressor[1]/percision
-                            theVs[10]=j/percision
-                            theVs[11]=k/percision
-
-                            theVs[12]=compressor[0]/percision
-                            theVs[13]=j/percision+1/percision
-                            theVs[14]=k/percision
-    
-                            theVs[15]=compressor[1]/percision
-                            theVs[16]=j/percision+1/percision
-                            theVs[17]=k/percision
-                            
-                            points()
-
-                            compressor[0]=-1
-                            compressor[1]=-1
-
-                        #Front
-                        if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A0" and space[(k+1)*(boundaryY*boundaryX)+j*(boundaryX)+i] != u"\u25A0" and compressor[2] == -1):
-                            compressor[2]=i
-                        if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A0" and (space[(k+1)*(boundaryY*boundaryX)+j*(boundaryX)+i+1] == u"\u25A0" or space[(k)*(boundaryY*boundaryX)+j*(boundaryX)+i+1] != u"\u25A0" or i==boundaryX-1) and compressor[2] != -1 and compressor[3] == -1):
-                            compressor[3]=i+1
-                        if compressor[2] != -1 and compressor[3] != -1:
-                            #Triangle RealFront1
-                            theVs[0]=compressor[2]/percision
-                            theVs[1]=j/percision+1/percision
-                            theVs[2]=k/percision+1/percision
-
-                            theVs[3]=compressor[2]/percision
-                            theVs[4]=j/percision
-                            theVs[5]=k/percision+1/percision
-                            
-                            theVs[6]=compressor[3]/percision
-                            theVs[7]=j/percision
-                            theVs[8]=k/percision+1/percision
-                            
-                            #Triangle RealFront2
-                            theVs[9]=compressor[2]/percision
-                            theVs[10]=j/percision+1/percision
-                            theVs[11]=k/percision+1/percision
-                            
-                            theVs[12]=compressor[3]/percision
-                            theVs[13]=j/percision
-                            theVs[14]=k/percision+1/percision
-
-                            theVs[15]=compressor[3]/percision
-                            theVs[16]=j/percision+1/percision
-                            theVs[17]=k/percision+1/percision
-                            
-                            points()
-                                
-                            compressor[2]=-1
-                            compressor[3]=-1
-
-
-#Going to have two more of these loops for the time being, for left right, and top down
-            for k in range (0, int(boundaryY)):
-                for j in range (0,int(boundaryX)):
-                    compressor[0] = -1
-                    compressor[1] = -1
-                    compressor[2] = -1
-                    compressor[3] = -1
-                    for i in range (0, int(boundaryZ)):
-                        #if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A0" and space[(k-1)*(boundaryY*boundaryX)+j*(boundaryX)+i] != u"\u25A0" and compressor[0] == -1):
-                            #compressor[0]=i
-                        #if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A0" and (space[(k-1)*(boundaryY*boundaryX)+j*(boundaryX)+i+1] == u"\u25A0" or space[(k)*(boundaryY*boundaryX)+j*(boundaryX)+i+1] != u"\u25A0" or i==boundaryX-1) and compressor[0] != -1 and compressor[1] == -1):
-                            #compressor[1]=i+1
-                        if compressor[0] != -1 and compressor[1] != -1:
-                            #Triangle RealBottom1
-                            theVs[0]=compressor[0]/percision
-                            theVs[1]=j/percision+1/percision
-                            theVs[2]=k/percision
-
-                            theVs[3]=compressor[1]/percision
-                            theVs[4]=j/percision
-                            theVs[5]=k/percision
-
-                            theVs[6]=compressor[0]/percision
-                            theVs[7]=j/percision
-                            theVs[8]=k/percision
-                            #Triangle RealBottom2
-                            theVs[9]=compressor[1]/percision
-                            theVs[10]=j/percision
-                            theVs[11]=k/percision
-
-                            theVs[12]=compressor[0]/percision
-                            theVs[13]=j/percision+1/percision
-                            theVs[14]=k/percision
-    
-                            theVs[15]=compressor[1]/percision
-                            theVs[16]=j/percision+1/percision
-                            theVs[17]=k/percision
-                            
-                            #points()
-
-                            compressor[0]=-1
-                            compressor[1]=-1
-
-                        #Front
-                        #if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A0" and space[(k+1)*(boundaryY*boundaryX)+j*(boundaryX)+i] != u"\u25A0" and compressor[2] == -1):
-                            #compressor[2]=i
-                        #if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A0" and (space[(k+1)*(boundaryY*boundaryX)+j*(boundaryX)+i+1] == u"\u25A0" or space[(k)*(boundaryY*boundaryX)+j*(boundaryX)+i+1] != u"\u25A0" or i==boundaryX-1) and compressor[2] != -1 and compressor[3] == -1):
-                            #compressor[3]=i+1
-                        if compressor[2] != -1 and compressor[3] != -1:
-                            #Triangle RealTop1
-                            theVs[0]=compressor[2]/percision
-                            theVs[1]=j/percision+1/percision
-                            theVs[2]=k/percision+1/percision
-
-                            theVs[3]=compressor[2]/percision
-                            theVs[4]=j/percision
-                            theVs[5]=k/percision+1/percision
-                            
-                            theVs[6]=compressor[3]/percision
-                            theVs[7]=j/percision
-                            theVs[8]=k/percision+1/percision
-                            
-                            #Triangle Top2
-                            theVs[9]=compressor[2]/percision
-                            theVs[10]=j/percision+1/percision
-                            theVs[11]=k/percision+1/percision
-                            
-                            theVs[12]=compressor[3]/percision
-                            theVs[13]=j/percision
-                            theVs[14]=k/percision+1/percision
-
-                            theVs[15]=compressor[3]/percision
-                            theVs[16]=j/percision+1/percision
-                            theVs[17]=k/percision+1/percision
-                            
-                            #points()
-                                
-                            compressor[2]=-1
-                            compressor[3]=-1
-
-
-                        
-                                                
-            for k in range (0, int(boundaryZ)):
-                for j in range (0,int(boundaryY)):
-                    for i in range (0, int(boundaryX)):
-                        if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A0"):
-                            
-                            if (space[(k)*(boundaryY*boundaryX)+(j)*(boundaryX)+i-1] == u"\u25A1" or i == 0):
-                                #Triangle L1
-                                theVs[0]=i/percision
-                                theVs[1]=j/percision
-                                theVs[2]=k/percision+1/percision
-
-                                theVs[3]=i/percision
-                                theVs[4]=j/percision+1/percision
-                                theVs[5]=k/percision+1/percision
-
-                                theVs[6]=i/percision
-                                theVs[7]=j/percision
-                                theVs[8]=k/percision
-                                #Triangle L2
-                                theVs[9]=i/percision
-                                theVs[10]=j/percision
-                                theVs[11]=k/percision
-
-                                theVs[12]=i/percision
-                                theVs[13]=j/percision+1/percision
-                                theVs[14]=k/percision+1/percision
-
-                                theVs[15]=i/percision
-                                theVs[16]=j/percision+1/percision
-                                theVs[17]=k/percision
-
-                                points()
-    
-                            if (space[(k)*(boundaryY*boundaryX)+(j)*(boundaryX)+i+1] == u"\u25A1"  or i == boundaryX-1):
-                                #Triangle R1
-                                theVs[0]=i/percision+1/percision
-                                theVs[1]=j/percision
-                                theVs[2]=k/percision
-
-                                theVs[3]=i/percision+1/percision
-                                theVs[4]=j/percision+1/percision
-                                theVs[5]=k/percision+1/percision
-
-                                theVs[6]=i/percision+1/percision
-                                theVs[7]=j/percision
-                                theVs[8]=k/percision+1/percision
-                                #Triangle R2
-                                theVs[9]=i/percision+1/percision
-                                theVs[10]=j/percision+1/percision
-                                theVs[11]=k/percision
-
-                                theVs[12]=i/percision+1/percision
-                                theVs[13]=j/percision+1/percision
-                                theVs[14]=k/percision+1/percision
-
-                                theVs[15]=i/percision+1/percision
-                                theVs[16]=j/percision
-                                theVs[17]=k/percision
-
-                                points()
-                                
-                            if (space[(k)*(boundaryY*boundaryX)+(j-1)*(boundaryX)+i] == u"\u25A1"  or j == 0):
-                                #Triangle Top1
-                                theVs[0]=i/percision+1/percision
-                                theVs[1]=j/percision
-                                theVs[2]=k/percision+1/percision
-
-                                theVs[3]=i/percision
-                                theVs[4]=j/percision
-                                theVs[5]=k/percision+1/percision
-
-                                theVs[6]=i/percision+1/percision
-                                theVs[7]=j/percision
-                                theVs[8]=k/percision
-                                #Triangle Top2
-                                theVs[9]=i/percision+1/percision
-                                theVs[10]=j/percision
-                                theVs[11]=k/percision
-
-                                theVs[12]=i/percision
-                                theVs[13]=j/percision
-                                theVs[14]=k/percision+1/percision
-
-                                theVs[15]=i/percision
-                                theVs[16]=j/percision
-                                theVs[17]=k/percision
-
-                                points()
-
-                            if (space[(k)*(boundaryY*boundaryX)+(j+1)*(boundaryX)+i] == u"\u25A1"  or j == boundaryY-1):
-                                #Triangle Bottom1
-                                theVs[0]=i/percision+1/percision
-                                theVs[1]=j/percision+1/percision
-                                theVs[2]=k/percision
-
-                                theVs[3]=i/percision
-                                theVs[4]=j/percision+1/percision
-                                theVs[5]=k/percision+1/percision
-
-                                theVs[6]=i/percision+1/percision
-                                theVs[7]=j/percision+1/percision
-                                theVs[8]=k/percision+1/percision
-                                #Triangle Bottom2
-                                theVs[9]=i/percision
-                                theVs[10]=j/percision+1/percision
-                                theVs[11]=k/percision
-
-                                theVs[12]=i/percision
-                                theVs[13]=j/percision+1/percision
-                                theVs[14]=k/percision+1/percision
-
-                                theVs[15]=i/percision+1/percision
-                                theVs[16]=j/percision+1/percision
-                                theVs[17]=k/percision
-
-                                points()
-
-
-                            
-            export.write(footer + '\n');
-            export.close();
-
+            Export.export
         if (command == "P" or command == "p"):
             exportpname = input('Enter File Name')
             exportpname = exportpname + ".txt"
