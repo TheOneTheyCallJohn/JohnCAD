@@ -7,6 +7,9 @@ import tkinter as tk
 import Generate1
 import Export
 import Simple #Simple often repeated functions
+
+isopen = True
+
 #Pygame window
 pygame.init()
 wireframedisplayX=1500
@@ -16,13 +19,22 @@ Edge = (255,255,255)
 Corner = (255,0,0)
 Background = (0,0,255)
 
-
-mode="SheetOperations"
-selection = 0
-isopen = 1
+#These variables are in two different, files, they are temp/default
+stock = "SheetMetal"
+x=15
+y=10
+z=5
 data = {}
-space = {}
+data[2]=5
+data[1]=10
+data[0]=15
+precision = 1
+material = {}
+material[0]="Aluminum"
+material[1]=2700
 
+
+space = {}
 #Space for temperature data
 spacetemp = {};
 spacek = {};
@@ -49,22 +61,21 @@ theVs = {}
 opens = {}
 processplanner = {}
 operationnum = 0
-material = {}
-material[0]="Aluminum"
-material[1]=2700
+
 
 compressor = {}
 
 
-precision = 1
 
 
 
 
 #Finally going to define some functions
-def generate(data,x,y,z,precision):
+def generate():
 
-    
+    global boundaryX
+    global boundaryY
+    global boundaryZ
     boundaryX=x
     boundaryY=y
     boundaryZ=z
@@ -94,7 +105,6 @@ def generate(data,x,y,z,precision):
         entryz.grid_forget()
         entryd.grid_forget()
     def sm():
-        print('test')
         global stock
         stock= "SheetMetal"
         clear()
@@ -139,7 +149,7 @@ def generate(data,x,y,z,precision):
         data[2]=z
     def gen():
         global mode
-
+        
         
 
         genWindow.destroy()
@@ -194,7 +204,6 @@ def generate(data,x,y,z,precision):
                                 space[(k)*(boundaryX*boundaryY)+(j)*(boundaryY)+i]=u"\u25A1";
             
             mode="StockOperations"
-            print("hi")
         #Barstock deatils   
         if (stock=="BarStock"):
             mode = "StockOperations"
@@ -261,28 +270,21 @@ def displaysetup():
     wireframedisplay.fill(Background)
     displayscale=(750/boundaryY)/2
 
-#These variables are in two different, files, they are temp/default
-global x
-global y
-global z
-global stock
-stock = "SheetMetal"
-x=15
-y=10
-z=5
 
 
-data[2]=5
-data[1]=10
-data[0]=15
 
-
-generate(data,x,y,z,precision)
+generate()
 
 
 print(precision)
 print(stock)
 print(mode)
+
+
+
+print(space)
+
+
 while (isopen==1):
 
 
