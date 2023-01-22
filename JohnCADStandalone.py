@@ -3,8 +3,8 @@ import math
 import pygame
 import tkinter as tk
 
-#Other Files/Functions, Export not required as of now
-import Generate1
+#Other Files/Functions
+import Generate
 import Export
 import Simple #Simple often repeated functions
 
@@ -21,13 +21,11 @@ Background = (0,0,255)
 
 #These variables are in two different, files, they are temp/default
 stock = "SheetMetal"
-x=15
-y=10
-z=5
+
 data = {}
 data[2]=5
 data[1]=10
-data[0]=15
+data[0]=10
 precision = 1
 material = {}
 material[0]="Aluminum"
@@ -76,20 +74,20 @@ def generate():
     global boundaryX
     global boundaryY
     global boundaryZ
-    boundaryX=x
-    boundaryY=y
-    boundaryZ=z
+    boundaryX=data[0]
+    boundaryY=data[1]
+    boundaryZ=data[2]
     
     genWindow = tk.Tk()
     labelx=tk.Label(genWindow, text="Width X")
     labely=tk.Label(genWindow, text="Length Y")
     labelz=tk.Label(genWindow, text="Height Z")
-    entryx=tk.Entry(genWindow, textvariable = x)
-    entryy=tk.Entry(genWindow, textvariable = y)
-    entryz=tk.Entry(genWindow, textvariable = z)
+    entryx=tk.Entry(genWindow, textvariable = data[0])
+    entryy=tk.Entry(genWindow, textvariable = data[1])
+    entryz=tk.Entry(genWindow, textvariable = data[2])
 
     labeld=tk.Label(genWindow, text="Diameter X Y")
-    entryd=tk.Entry(genWindow, textvariable = y)
+    entryd=tk.Entry(genWindow, textvariable = data[1])
 
     labelb=tk.Label(genWindow, text="")
     
@@ -154,9 +152,9 @@ def generate():
 
         genWindow.destroy()
         if (stock=="SheetMetal"):
-            boundaryX
-            boundaryY
-            boundaryZ
+            boundaryX=data[0]
+            boundaryY=data[1]
+            boundaryZ=data[2]
             print("Thickness, Width, Height")
             print(data[0],'mm',data[1],'mm',data[2],'mm');
 
@@ -177,6 +175,10 @@ def generate():
 
         #RoundStockGeneration
         if (stock== "RoundStock"):
+            print('test')
+            boundaryX=data[0]
+            boundaryY=data[1]
+            boundaryZ=data[2]
             print("Diameter, Length");
             print(data[0], 'mm' ,data[1], 'mm');
             for k in range (-1, 0):
@@ -197,15 +199,18 @@ def generate():
                             if math.sqrt((i+.5-((boundaryX)/2))**2+(j+.5-((boundaryY)/2))**2) <= (data[0]*precision)/2:
                                 space[(k)*(boundaryX*boundaryY)+(j)*(boundaryY)+i]=u"\u25A0";
                                 data[2]=data[2]+1
-                            elif math.sqrt((i+.5-((boundaryX)/2))**2+(j+.5-((boundaryY)/2))**2) > (data[0]*precision)/2 and math.sqrt((i+.5-((boundaryX)/2))**2+(j+.5-((boundaryY)/2))**2) < (data[0]*precision)/2+.8:
-                                space[(k)*(boundaryX*boundaryY)+(j)*(boundaryY)+i]=u"\u25A2";
+                            #elif math.sqrt((i+.5-((boundaryX)/2))**2+(j+.5-((boundaryY)/2))**2) > (data[0]*precision)/2 and math.sqrt((i+.5-((boundaryX)/2))**2+(j+.5-((boundaryY)/2))**2) < (data[0]*precision)/2+.8:
+                                #space[(k)*(boundaryX*boundaryY)+(j)*(boundaryY)+i]=u"\u25A2";
                                 
-                            elif math.sqrt((i+.5-((boundaryX)/2))**2+(j+.5-((boundaryY)/2))**2) > (data[0]*precision)/2+.8:
+                            if math.sqrt((i+.5-((boundaryX)/2))**2+(j+.5-((boundaryY)/2))**2) > (data[0]*precision)/2:
                                 space[(k)*(boundaryX*boundaryY)+(j)*(boundaryY)+i]=u"\u25A1";
             
             mode="StockOperations"
         #Barstock deatils   
         if (stock=="BarStock"):
+            boundaryX=data[0]
+            boundaryY=data[1]
+            boundaryZ=data[2]
             mode = "StockOperations"
             for k in range (-1, 0):
                 for j in range (0, int(boundaryY)):
@@ -236,6 +241,10 @@ def generate():
     tk.Radiobutton(genWindow, text="1/1 mm", command = p1, variable = 1, value = 0).grid(row=1, column=1)
     tk.Radiobutton(genWindow, text="1/10 mm", command = p2, variable = 1, value = 1).grid(row=2, column=1)
     tk.Radiobutton(genWindow, text="1/100 mm     ", command = p3, variable = 1, value = 2).grid(row=3, column=1)
+
+    tk.Label(genWindow, text="Data Storage (Coming soon):").grid(row=0, column=2)
+    tk.Radiobutton(genWindow, text="RAM (Faster)", command = p1, variable = 2, value = 0).grid(row=1, column=2)
+    tk.Radiobutton(genWindow, text="Disk (For larger files)", command = p2, variable = 2, value = 1).grid(row=2, column=2)
 
     tk.Button(genWindow, text="Generate!", command = gen).grid(row=8, column=0)
     genWindow.mainloop()
@@ -682,8 +691,7 @@ while (isopen==1):
             print("Enter Initial Temp");
             thermalsetup[4] = input();
             spacetemp[int(thermalsetup[3])*(boundaryY*boundaryX)+int(thermalsetup[2])*(boundaryX)+ int(thermalsetup[1])]=int(thermalsetup[4]);
-#heat transfer rate Q = (t1-t2)/R
-#R = L/KA  L thickness? k conducivity, A area
+
             
             
         if (command == "H" or command == "h"):
