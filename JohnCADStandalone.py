@@ -289,9 +289,15 @@ print(precision)
 print(stock)
 print(mode)
 
+#reminder to move this back down to thermal
+restingtemp=0
+for k in range (-1, int(boundaryZ+1)):
+    for j in range (0, int(boundaryY)):
+        for i in range (0, int(boundaryX)):
+            spacetemp[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=restingtemp
+            spacetemp[0]=100
 
 
-print(space)
 
 
 while (isopen==1):
@@ -375,8 +381,7 @@ while (isopen==1):
                 print("Layer ", k+1);
                 for j in range(0, int(boundaryY)):
                     for i in range(0, int(boundaryX)):
-                        #space[   int(k*(boundaryX*boundaryY)+j*(boundaryX))+i] = int(k*(boundaryX*boundaryY)+j*(boundaryX)+i)
-                        #space[   int(i*(boundaryX*boundaryY)+j*(boundaryX))+k] =int(math.sqrt((k-((data[0]+2)/2-.5))**2+(j-((data[0]+2)/2-.5))**2))
+
                         print(space[   int(k*(boundaryX*boundaryY)+(boundaryY-1-j)*(boundaryX))+i     ], "" ,end = ""); #insert boundaryY-1- before j to swap y axis
                     print("");
                 
@@ -671,6 +676,13 @@ while (isopen==1):
         print("Enter Z to return");
         command=input();
 
+        #temp defaults
+        alphasymbolthing = .0000177
+        thermalstep = .01
+        dxyz=.001/precision
+        
+
+
 
         
         if (command == "Z" or command == "z"):
@@ -692,20 +704,34 @@ while (isopen==1):
             thermalsetup[4] = input();
             spacetemp[int(thermalsetup[3])*(boundaryY*boundaryX)+int(thermalsetup[2])*(boundaryX)+ int(thermalsetup[1])]=int(thermalsetup[4]);
 
-            
+        if (command == "S" or command == "s"):
+
+            for t in range (0, int(5)):
+                for k in range (0, int(boundaryZ)):
+                    for j in range (0,int(boundaryY)):
+                        for i in range (0, int(boundaryX)):
+                            ot=spacetemp[k*(boundaryY*boundaryX)+j*(boundaryX)+i]
+                            lt=spacetemp[k*(boundaryY*boundaryX)+j*(boundaryX)+i-1]
+                            rt=spacetemp[k*(boundaryY*boundaryX)+j*(boundaryX)+i+1]
+                            dt=spacetemp[k*(boundaryY*boundaryX)+(j-1)*(boundaryX)+i]
+                            tt=spacetemp[k*(boundaryY*boundaryX)+(j+1)*(boundaryX)+i]
+                            #This part was not my work
+                            spacetemp[k*(boundaryY*boundaryX)+j*(boundaryX)+i] = ot + alphasymbolthing*thermalstep*(      (((lt-ot)/(dxyz)-(rt-ot)/(dxyz))/dxyz)+(((dt-ot)/(dxyz)-(tt-ot)/(dxyz))/dxyz)              )
             
         if (command == "H" or command == "h"):
-            for k in range (0, int(boundaryZ)):
-                for j in range (0,int(boundaryY)):
-                    for i in range (0, int(boundaryX)):
-                        if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A1"):
-                            spacetemp[k*(boundaryY*boundaryX)+j*(boundaryX)+i]="X";
-                        if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A0"):
-                            spacetemp[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=0;
-            for k in range(0, int(boundaryZ)*precision):
+            wireframedisplay=pygame.display.set_mode((wireframedisplayX,wireframedisplayY))
+            pygame.display.set_caption("Face Wireframes")
+            wireframedisplay.fill(Background)
+            for k in range(0, int(boundaryZ)):
                 print("");
-                print("Layer ", i+1);
-                for j in range(0, int(boundaryY)*precision):
-                    for i in range(0, int(boundaryX)*precision):
-                        print(spacetemp[   int(k*(boundaryX*boundaryY*precision)+j*(boundaryX*precision))+i     ], u"\u00B0" ,end = "");
+                print("Layer ", k+1);
+                for j in range(0, int(boundaryY)):
+                    for i in range(0, int(boundaryX)):
+                        color = ( abs(int(spacetemp[   int(0*(boundaryX*boundaryY)+j*(boundaryX))+i     ])/100*255),0,0)
+                        
+                        pygame.draw.rect(wireframedisplay,color,(i*10,j*10,1*10,1*10))
+                        pygame.display.update()
+                        print(spacetemp[   int(k*(boundaryX*boundaryY)+(boundaryY-1-j)*(boundaryX))+i     ], "" ,end = ""); #boundaryY-1- before j to swap y axis
                     print("");
+            
+                    
