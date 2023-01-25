@@ -1,13 +1,7 @@
-#Now displaying in 3d, functions returning soon!
 import os
 import math
 import pygame
 import tkinter as tk
-
-#Other Files/Functions
-import Generate
-import Export
-import Simple #Simple often repeated functions
 
 isopen = True
 
@@ -41,6 +35,7 @@ stlprep = {}
 adjacents={}
 
 operation = {}
+operation[0]=0
 lathe = {}
 mill = {}
 drill = {}
@@ -48,15 +43,18 @@ drill = {}
 top = {}
 front = {}
 right = {}
-
+#Export
+header = "solid MadeWithJohnCAD"
+facetn = "facet normal 0 0 0"
+oloop = 'outer loop'
+eloop ='endloop'
+endfacet = "endfacet"
+footer = "endsolid MadeWithJohncad";
 theVs = {}
 opens = {}
 processplanner = {}
 operationnum = 0
-
-
 compressor = {}
-
 
 
 
@@ -304,69 +302,131 @@ pygame.init()
 Edge = (255,255,255)
 Corner = (255,0,0)
 Background = (64,244,208)
+MenuRGB = (229,228,228)
 width=1500
 height=750
-display=pygame.display.set_mode((width,height))
+mdisplay=pygame.display.set_mode((width,height))
 pygame.display.set_caption("I humbly present JohnCAD")
-display.fill(Background)
+mdisplay.fill(Background)
 
 opfont= pygame.font.SysFont("candara",20)
 menu1 = opfont.render("Mill Operations M", 1, (0,0,0))
 menu2 = opfont.render("Lathe Operations L", 1, (0,0,0))
-menu3 = opfont.render("Drill Operatrions D", 1, (0,0,0))
+menu3 = opfont.render("Drill Operations D", 1, (0,0,0))
 menu4 = opfont.render("Exporting", 1, (0,0,0))
 menu5 = opfont.render("Analysis", 1, (0,0,0))
 #make menu an array for org
 
 
-shading=[155,155,155]
-xshading=(shading[0]+10,shading[1],shading[2])
-yshading=(shading[0],shading[1]+10,shading[2])
-zshading=(shading[0],shading[1],shading[2]+10)
+
 
 
 orgin=(width/2,height-height/2)
 
 
-print(pygame.font.get_fonts())
-while (isopen==1):
-    display.fill(Background)
 
 
 
+
+
+#print(pygame.font.get_fonts())
+while (isopen==True):
+    mdisplay.fill(0)
+    mdisplay.fill(Background) 
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            isopen = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_m:
+                operation[0] = "Mill"
+                print(operation[0])
+            if event.key == pygame.K_l:
+                operation[0] = "Lathe"
+            if event.key == pygame.K_d:
+                operation[0] = "Drill"
+            if event.key == pygame.K_e:
+                operation[0] = "Export"
+            if event.key == pygame.K_RIGHT:
+                orgin[0]=10
+            if event.key == pygame.K_LEFT:
+                orgin[0]=orgin[0]-1
+            if event.key == pygame.K_UP:
+                orgin[0]=10
+            if event.key == pygame.K_DOWN:
+                orgin[0]=orgin[0]-1
+
+    #Backgrounds to text and sidebar
+    if operation[0] != 0:
+        pygame.draw.rect(mdisplay, MenuRGB,((0,100), (200,height-100))) 
+    if operation[0] == "Mill":
+        pygame.draw.rect(mdisplay, (255,255,255),(0,0), width=10,height=10)
+    #if operation[0] == "Export":
 
     
+
+            
+        
     displayscale=(750/boundaryY)/2
-    display.blit(menu1,(10,10))
-    display.blit(menu2,(200,10))
-    display.blit(menu3,(400,10))
-    display.blit(menu4,(600,10))
-    display.blit(menu5,(800,10))
     scale = 10
+
+
+    pygame.draw.rect(mdisplay, MenuRGB,((0,0), (width,100)))
+    mdisplay.blit(menu1,(10,10))
+    mdisplay.blit(menu2,(200,10))
+    mdisplay.blit(menu3,(400,10))
+    mdisplay.blit(menu4,(600,10))
+    mdisplay.blit(menu5,(800,10))
+    
     #save time by skipping entire row once outermost voxel drawn
+
+
+
+#Color settings
+    displaymode = 0
+    if displaymode == 0:
+        shading=[55,55,55]
+        xshading=(shading[0]+10,shading[1],shading[2])
+        yshading=(shading[0],shading[1]+10,shading[2])
+        zshading=(shading[0],shading[1],shading[2]+10)
+
 
     for k in range(0, int(boundaryZ)*precision):
         for j in range(0, int(boundaryY)*precision):
             for i in range(0, int(boundaryX)*precision):
-                if space[int(k*(boundaryX*boundaryY*precision)+j*(boundaryX*precision))+i] == u"\u25A0": 
-                    #pygame.draw.rect(display,Edge,((j-i)*scale+100,((i+j)/2-k)*scale+100,1*scale,1*scale))
+                if space[int(k*(boundaryX*boundaryY*precision)+j*(boundaryX*precision))+i] == u"\u25A0":
+                    if displaymode == 1:
+                        if spacetemp[int(k*(boundaryX*boundaryY)+(j)*(boundaryX))+i] <= 400/2:
+                            xshading=(0+spacetemp[int(k*(boundaryX*boundaryY)+(j)*(boundaryX))+i]/200*255,255,0)
+                            #print(0+spacetemp[int(k*(boundaryX*boundaryY)+(j)*(boundaryX))+i]/200*255)
+                            yshading=xshading
+                            zshading=yshading
+                        if spacetemp[int(k*(boundaryX*boundaryY)+(j)*(boundaryX))+i] >= 400/2:
+                            xshading=(255,255-spacetemp[int(k*(boundaryX*boundaryY)+(j)*(boundaryX))+i]/200*255+255,0)
+                            #print(255-spacetemp[int(k*(boundaryX*boundaryY)+(j)*(boundaryX))+i]/200*255+255)
+                            yshading=xshading
+                            zshading=yshading
+
+                        
                     dx=(j-i)*scale+orgin[0]
                     dy=((i+j)/2-k)*scale+orgin[1]
                     hy=math.sqrt(scale**2+scale**2)
-                    pygame.draw.circle(display, (255,0,0), (dx,dy), 2)
-                    pygame.draw.polygon(display, xshading, ((dx,dy),(dx,dy-hy),(dx+math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy-hy),(dx+math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy))) #X+
-                    pygame.draw.polygon(display, yshading, ((dx,dy-hy),(dx,dy),(dx-math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy),(dx-math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy-hy))) #Y+
+                    
+                    pygame.draw.polygon(mdisplay, xshading, ((dx,dy+hy),(dx,dy),(dx+math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy),(dx+math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy+hy))) #X+
+                    pygame.draw.polygon(mdisplay, yshading, ((dx,dy),(dx,dy+hy),(dx-math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy+hy),(dx-math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy))) #Y+
                     #pygame.draw.polygon(display, zshading, ((dx,dy),(dx-math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy),(dx,dy-hy),(dx+math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy))) #Z-
-                    pygame.draw.polygon(display, zshading, ((dx,dy-hy),(dx-math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy-hy),(dx,dy-hy-hy),(dx+math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy-hy))) #Z+
-                    #print(dx+100,dy+100)
-                    #print(dx+100,dy+scale+100)
-                    #print(dx+math.cos(30)*hy+100, dy+math.sin(30)*hy+100)
-                    #print(dx+math.cos(30)*hy+100, dy+math.sin(30)*hy+scale+100)
-
-    pygame.draw.circle(display, (255,0,0), (orgin), 2)
-    pygame.draw.line(display, (255,0,0), (orgin), (orgin[0]+math.cos(math.degrees(30))*(boundaryX*scale),orgin[1]-math.sin(math.degrees(30))*(boundaryX*scale))  )
-    pygame.draw.line(display, (0,255,0), (orgin), (orgin[0]-math.cos(math.degrees(30))*(boundaryY*scale),orgin[1]-math.sin(math.degrees(30))*(boundaryY*scale))  )
-    pygame.draw.line(display, (0,0,100), (orgin), (orgin[0],orgin[1]-boundaryZ*scale))
+                    pygame.draw.polygon(mdisplay, zshading, ((dx,dy),(dx-math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy),(dx,dy-math.cos(math.degrees(60))*scale*2),(dx+math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy))) #Z+
+                    
+    #for k in range(0, int(boundaryZ)*precision):
+        #for j in range(0, int(boundaryY)*precision):
+            #for i in range(0, int(boundaryX)*precision):
+                #dx=(j-i)*scale+orgin[0]
+                #dy=((i+j)/2-k)*scale+orgin[1]
+                #hy=math.sqrt(scale**2+scale**2)
+                #pygame.draw.circle(mdisplay, (255,0,0), (dx,dy), 2)
+    pygame.draw.circle(mdisplay, (255,0,0), (orgin), 2)
+    pygame.draw.line(mdisplay, (255,0,0), (orgin), (orgin[0]+math.cos(math.degrees(30))*(boundaryX*scale),orgin[1]-math.sin(math.degrees(30))*(boundaryX*scale))  )
+    pygame.draw.line(mdisplay, (0,255,0), (orgin), (orgin[0]-math.cos(math.degrees(30))*(boundaryX*scale),orgin[1]-math.sin(math.degrees(30))*(boundaryX*scale))  )
+    pygame.draw.line(mdisplay, (0,0,100), (orgin), (orgin[0],orgin[1]-boundaryZ*scale))
     pygame.display.update()
 
 
@@ -375,84 +435,319 @@ while (isopen==1):
 
 
 
-
     if (mode=="StockOperations"):
-        print("Operations");
-        print("Press M for Mill operations")
-        print("Press L for Lathe operations")
-        print("Enter E for Export STL");
-        print("Enter P for Export Process Plan");
-        print("Enter D for Display");
-        print("Enter H for Layered Display");
-        print("Enter A for Analysis");
 
-        command=input();
+        #command=input();
+        command=1
 
 
 
-        #Display
-        if (command == "D" or command == "d"):
-            for k in range(0, int(boundaryZ)*precision):
-                for j in range(0, int(boundaryY)*precision):
-                    for i in range(0, int(boundaryX)*precision):
-                        front[int(i*(boundaryX*precision))+j]=u"\u25A1"
-                        top[int(k*(boundaryX*precision))+i] = u"\u25A1"
-                        right[int(k*(boundaryX*precision))+j] = u"\u25A1"
-
-            #Generate Top
-            for k in range(0, int(boundaryZ)*precision):
-                for j in range(0, int(boundaryY)*precision):
-                    for i in range(0, int(boundaryX)*precision):
-                        if space[int(k*(boundaryX*boundaryY*precision)+j*(boundaryX*precision))+i] == u"\u25A0":
-                            top[int(k*(boundaryX*precision))+i] = u"\u25A0"
-                        if top[int(k*(boundaryX*precision))+i] != u"\u25A0" and space[int(k*(boundaryX*boundaryY*precision)+j*(boundaryX*precision))+i] == u"\u25A1":
-                            top[int(k*(boundaryX*precision))+i] = u"\u25A1"
-                            
-            #Generate Front
-            for k in range(0, int(boundaryZ)*precision):
-                for j in range(0, int(boundaryY)*precision):
-                    for i in range(0, int(boundaryX)*precision):
-                        if space[int(k*(boundaryX*boundaryY*precision)+j*(boundaryX*precision))+i] == u"\u25A0":
-                            front[int(j*(boundaryX*precision))+i] = u"\u25A0"
-                        if space[int(k*(boundaryX*boundaryY*precision)+j*(boundaryX*precision))+i] == u"\u25A1":
-                            front[int(j*(boundaryX*precision))+i] = u"\u25A1"
-                            
-                        #Draw hatch if on the outside
-            #for k in range(0, int(boundaryZ)*precision):
-                #for j in range(0, int(boundaryY)*precision):
-                    #for i in range(0, int(boundaryX)*precision):
-                        #if openl[int(k*(boundaryX*boundaryY*precision)+j*(boundaryX*precision))+i] == 1 or openr[int(k*(boundaryX*boundaryY*precision)+j*(boundaryX*precision))+i] == 1 or opent[int(k*(boundaryX*boundaryY*precision)+j*(boundaryX*precision))+i] == 1 or openb[int(k*(boundaryX*boundaryY*precision)+j*(boundaryX*precision))+i] == 1:
-                            #front[int(j*(boundaryX*precision))+k] = u"\u25A4"
-
-
-
-            #Generate Right
-            for k in range(0, int(boundaryZ)*precision):
-                for j in range(0, int(boundaryY)*precision):
-                    for i in range(0, int(boundaryX)*precision):
-                        if space[int(k*(boundaryX*boundaryY*precision)+j*(boundaryX*precision))+i] == u"\u25A0":
-                            right[int(k*(boundaryX*precision))+j] = u"\u25A0"
-                        if right[int(k*(boundaryX*precision))+j] != u"\u25A0" and space[int(k*(boundaryX*boundaryY*precision)+j*(boundaryX*precision))+i] == u"\u25A1":
-                            right[int(k*(boundaryX*precision))+j] = u"\u25A1"
-
-                            
-
-                        
-        #Full Layered Display
-        if (command == "H" or command == "h"):
-            for k in range(0, int(boundaryZ)):
-                print("");
-                print("Layer ", k+1);
-                for j in range(0, int(boundaryY)):
-                    for i in range(0, int(boundaryX)):
-
-                        print(space[   int(k*(boundaryX*boundaryY)+(boundaryY-1-j)*(boundaryX))+i     ], "" ,end = ""); #insert boundaryY-1- before j to swap y axis
-                    print("");
                 
                     
         #Export
         if (command == "E" or command == "e"):
-            Export.export(boundaryX,boundaryY,boundaryZ)
+
+            exportname = input('Enter File Name')
+            exportname = exportname + ".stl"
+            export = open(exportname, 'w');
+            export.write(header + '\n');
+
+
+
+            #Rounded Edges
+            for k in range (0, int(boundaryZ)):
+                for j in range (0,int(boundaryY)):
+                    for i in range (0, int(boundaryX)):            
+                         if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A2"):
+                             h=1
+
+
+            #Compress STLS and hopefuflly make it run faster
+            #Bottom Compression
+            for k in range (0, int(boundaryZ)):
+                for j in range (0,int(boundaryY)):
+                    compressor[0] = -1
+                    compressor[1] = -1
+                    compressor[2] = -1
+                    compressor[3] = -1
+                    for i in range (0, int(boundaryX)):
+                        if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A0" and space[(k-1)*(boundaryY*boundaryX)+j*(boundaryX)+i] != u"\u25A0" and compressor[0] == -1):
+                            compressor[0]=i
+                        if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A0" and (space[(k-1)*(boundaryY*boundaryX)+j*(boundaryX)+i+1] == u"\u25A0" or space[(k)*(boundaryY*boundaryX)+j*(boundaryX)+i+1] != u"\u25A0" or i==boundaryX-1) and compressor[0] != -1 and compressor[1] == -1):
+                            compressor[1]=i+1
+                        if compressor[0] != -1 and compressor[1] != -1:
+                            #Triangle RealAft1
+                            theVs[0]=compressor[0]/precision
+                            theVs[1]=j/precision+1/precision
+                            theVs[2]=k/precision
+
+                            theVs[3]=compressor[1]/precision
+                            theVs[4]=j/precision
+                            theVs[5]=k/precision
+
+                            theVs[6]=compressor[0]/precision
+                            theVs[7]=j/precision
+                            theVs[8]=k/precision
+                            #Triangle RealAft2
+                            theVs[9]=compressor[1]/precision
+                            theVs[10]=j/precision
+                            theVs[11]=k/precision
+
+                            theVs[12]=compressor[0]/precision
+                            theVs[13]=j/precision+1/precision
+                            theVs[14]=k/precision
+
+                            theVs[15]=compressor[1]/precision
+                            theVs[16]=j/precision+1/precision
+                            theVs[17]=k/precision
+                            
+                            points()
+
+                            compressor[0]=-1
+                            compressor[1]=-1
+
+                        #Front
+                        if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A0" and space[(k+1)*(boundaryY*boundaryX)+j*(boundaryX)+i] != u"\u25A0" and compressor[2] == -1):
+                            compressor[2]=i
+                        if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A0" and (space[(k+1)*(boundaryY*boundaryX)+j*(boundaryX)+i+1] == u"\u25A0" or space[(k)*(boundaryY*boundaryX)+j*(boundaryX)+i+1] != u"\u25A0" or i==boundaryX-1) and compressor[2] != -1 and compressor[3] == -1):
+                            compressor[3]=i+1
+                        if compressor[2] != -1 and compressor[3] != -1:
+                            #Triangle RealFront1
+                            theVs[0]=compressor[2]/precision
+                            theVs[1]=j/precision+1/precision
+                            theVs[2]=k/precision+1/precision
+
+                            theVs[3]=compressor[2]/precision
+                            theVs[4]=j/precision
+                            theVs[5]=k/precision+1/precision
+                            
+                            theVs[6]=compressor[3]/precision
+                            theVs[7]=j/precision
+                            theVs[8]=k/precision+1/precision
+                            
+                            #Triangle RealFront2
+                            theVs[9]=compressor[2]/precision
+                            theVs[10]=j/precision+1/precision
+                            theVs[11]=k/precision+1/precision
+                            
+                            theVs[12]=compressor[3]/precision
+                            theVs[13]=j/precision
+                            theVs[14]=k/precision+1/precision
+
+                            theVs[15]=compressor[3]/precision
+                            theVs[16]=j/precision+1/precision
+                            theVs[17]=k/precision+1/precision
+                            
+                            points()
+                                
+                            compressor[2]=-1
+                            compressor[3]=-1
+
+
+        #Going to have two more of these loops for the time being, for left right, and top down
+            for k in range (0, int(boundaryY)):
+                for j in range (0,int(boundaryX)):
+                    compressor[0] = -1
+                    compressor[1] = -1
+                    compressor[2] = -1
+                    compressor[3] = -1
+                    for i in range (0, int(boundaryZ)):
+                        #if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A0" and space[(k-1)*(boundaryY*boundaryX)+j*(boundaryX)+i] != u"\u25A0" and compressor[0] == -1):
+                            #compressor[0]=i
+                        #if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A0" and (space[(k-1)*(boundaryY*boundaryX)+j*(boundaryX)+i+1] == u"\u25A0" or space[(k)*(boundaryY*boundaryX)+j*(boundaryX)+i+1] != u"\u25A0" or i==boundaryX-1) and compressor[0] != -1 and compressor[1] == -1):
+                            #compressor[1]=i+1
+                        if compressor[0] != -1 and compressor[1] != -1:
+                            #Triangle RealBottom1
+                            theVs[0]=compressor[0]/precision
+                            theVs[1]=j/precision+1/precision
+                            theVs[2]=k/precision
+
+                            theVs[3]=compressor[1]/precision
+                            theVs[4]=j/precision
+                            theVs[5]=k/precision
+
+                            theVs[6]=compressor[0]/precision
+                            theVs[7]=j/precision
+                            theVs[8]=k/precision
+                            #Triangle RealBottom2
+                            theVs[9]=compressor[1]/precision
+                            theVs[10]=j/precision
+                            theVs[11]=k/precision
+
+                            theVs[12]=compressor[0]/precision
+                            theVs[13]=j/precision+1/precision
+                            theVs[14]=k/precision
+
+                            theVs[15]=compressor[1]/precision
+                            theVs[16]=j/precision+1/precision
+                            theVs[17]=k/precision
+                            
+                            #points()
+
+                            compressor[0]=-1
+                            compressor[1]=-1
+
+                        #Front
+                        #if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A0" and space[(k+1)*(boundaryY*boundaryX)+j*(boundaryX)+i] != u"\u25A0" and compressor[2] == -1):
+                            #compressor[2]=i
+                        #if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A0" and (space[(k+1)*(boundaryY*boundaryX)+j*(boundaryX)+i+1] == u"\u25A0" or space[(k)*(boundaryY*boundaryX)+j*(boundaryX)+i+1] != u"\u25A0" or i==boundaryX-1) and compressor[2] != -1 and compressor[3] == -1):
+                            #compressor[3]=i+1
+                        if compressor[2] != -1 and compressor[3] != -1:
+                            #Triangle RealTop1
+                            theVs[0]=compressor[2]/precision
+                            theVs[1]=j/precision+1/precision
+                            theVs[2]=k/precision+1/precision
+
+                            theVs[3]=compressor[2]/precision
+                            theVs[4]=j/precision
+                            theVs[5]=k/precision+1/precision
+                            
+                            theVs[6]=compressor[3]/precision
+                            theVs[7]=j/precision
+                            theVs[8]=k/precision+1/precision
+                            
+                            #Triangle Top2
+                            theVs[9]=compressor[2]/precision
+                            theVs[10]=j/precision+1/precision
+                            theVs[11]=k/precision+1/precision
+                            
+                            theVs[12]=compressor[3]/precision
+                            theVs[13]=j/precision
+                            theVs[14]=k/precision+1/precision
+
+                            theVs[15]=compressor[3]/precision
+                            theVs[16]=j/precision+1/precision
+                            theVs[17]=k/precision+1/precision
+                            
+                            #points()
+                                
+                            compressor[2]=-1
+                            compressor[3]=-1
+
+
+                        
+                                                
+            for k in range (0, int(boundaryZ)):
+                for j in range (0,int(boundaryY)):
+                    for i in range (0, int(boundaryX)):
+                        if (space[k*(boundaryY*boundaryX)+j*(boundaryX)+i] == u"\u25A0"):
+                            
+                            if (space[(k)*(boundaryY*boundaryX)+(j)*(boundaryX)+i-1] == u"\u25A1" or i == 0):
+                                #Triangle L1
+                                theVs[0]=i/precision
+                                theVs[1]=j/precision
+                                theVs[2]=k/precision+1/precision
+
+                                theVs[3]=i/precision
+                                theVs[4]=j/precision+1/precision
+                                theVs[5]=k/precision+1/precision
+
+                                theVs[6]=i/precision
+                                theVs[7]=j/precision
+                                theVs[8]=k/precision
+                                #Triangle L2
+                                theVs[9]=i/precision
+                                theVs[10]=j/precision
+                                theVs[11]=k/precision
+
+                                theVs[12]=i/precision
+                                theVs[13]=j/precision+1/precision
+                                theVs[14]=k/precision+1/precision
+
+                                theVs[15]=i/precision
+                                theVs[16]=j/precision+1/precision
+                                theVs[17]=k/precision
+
+                                points()
+
+                            if (space[(k)*(boundaryY*boundaryX)+(j)*(boundaryX)+i+1] == u"\u25A1"  or i == boundaryX-1):
+                                #Triangle R1
+                                theVs[0]=i/precision+1/precision
+                                theVs[1]=j/precision
+                                theVs[2]=k/precision
+
+                                theVs[3]=i/precision+1/precision
+                                theVs[4]=j/precision+1/precision
+                                theVs[5]=k/precision+1/precision
+
+                                theVs[6]=i/precision+1/precision
+                                theVs[7]=j/precision
+                                theVs[8]=k/precision+1/precision
+                                #Triangle R2
+                                theVs[9]=i/precision+1/precision
+                                theVs[10]=j/precision+1/precision
+                                theVs[11]=k/precision
+
+                                theVs[12]=i/precision+1/precision
+                                theVs[13]=j/precision+1/precision
+                                theVs[14]=k/precision+1/precision
+
+                                theVs[15]=i/precision+1/precision
+                                theVs[16]=j/precision
+                                theVs[17]=k/precision
+
+                                points()
+                                
+                            if (space[(k)*(boundaryY*boundaryX)+(j-1)*(boundaryX)+i] == u"\u25A1"  or j == 0):
+                                #Triangle Top1
+                                theVs[0]=i/precision+1/precision
+                                theVs[1]=j/precision
+                                theVs[2]=k/precision+1/precision
+
+                                theVs[3]=i/precision
+                                theVs[4]=j/precision
+                                theVs[5]=k/precision+1/precision
+
+                                theVs[6]=i/precision+1/precision
+                                theVs[7]=j/precision
+                                theVs[8]=k/precision
+                                #Triangle Top2
+                                theVs[9]=i/precision+1/precision
+                                theVs[10]=j/precision
+                                theVs[11]=k/precision
+
+                                theVs[12]=i/precision
+                                theVs[13]=j/precision
+                                theVs[14]=k/precision+1/precision
+
+                                theVs[15]=i/precision
+                                theVs[16]=j/precision
+                                theVs[17]=k/precision
+
+                                points()
+
+                            if (space[(k)*(boundaryY*boundaryX)+(j+1)*(boundaryX)+i] == u"\u25A1"  or j == boundaryY-1):
+                                #Triangle Bottom1
+                                theVs[0]=i/precision+1/precision
+                                theVs[1]=j/precision+1/precision
+                                theVs[2]=k/precision
+
+                                theVs[3]=i/precision
+                                theVs[4]=j/precision+1/precision
+                                theVs[5]=k/precision+1/precision
+
+                                theVs[6]=i/precision+1/precision
+                                theVs[7]=j/precision+1/precision
+                                theVs[8]=k/precision+1/precision
+                                #Triangle Bottom2
+                                theVs[9]=i/precision
+                                theVs[10]=j/precision+1/precision
+                                theVs[11]=k/precision
+
+                                theVs[12]=i/precision
+                                theVs[13]=j/precision+1/precision
+                                theVs[14]=k/precision+1/precision
+
+                                theVs[15]=i/precision+1/precision
+                                theVs[16]=j/precision+1/precision
+                                theVs[17]=k/precision
+
+                                points()
+
+
+                            
+            export.write(footer + '\n');
+            export.close();
         if (command == "P" or command == "p"):
             exportpname = input('Enter File Name')
             exportpname = exportpname + ".txt"
@@ -772,7 +1067,6 @@ while (isopen==1):
         if (command == "S" or command == "s"):
 
             for t in range (0, int(20)):
-                
                 for k in range (-1, int(boundaryZ)+1):
                     for j in range (0,int(boundaryY)):
                         for i in range (0, int(boundaryX)):
@@ -814,18 +1108,13 @@ while (isopen==1):
                                 spacetemp[k*(boundaryY*boundaryX)+j*(boundaryX)+i] = ot + alphasymbolthing*thermalstep*(      (((rt-ot)/(dxyz)-(lt-ot)/(dxyz))/dxyz)+(((dt-ot)/(dxyz)-(tt-ot)/(dxyz))/dxyz) +(((bt-ot)/(dxyz)-(ft-ot)/(dxyz))/dxyz)              )
             
         if (command == "H" or command == "h"):
-            wireframedisplay=pygame.display.set_mode((wireframedisplayX,wireframedisplayY))
-            pygame.display.set_caption("Face Wireframes")
-            wireframedisplay.fill(Background)
             for k in range(0, int(boundaryZ)):
                 print("");
                 print("Layer ", k+1);
                 for j in range(0, int(boundaryY)):
                     for i in range(0, int(boundaryX)):
                         print(spacetemp[   int(k*(boundaryX*boundaryY)+(j)*(boundaryX))+i     ], "" ,end = ""); #boundaryY-1- before j to swap y axis
-                        color = ( abs(int(spacetemp[   int(0*(boundaryX*boundaryY)+j*(boundaryX))+i     ])/500*255),0,0)
-                        pygame.draw.rect(wireframedisplay,color,(i*10,j*10,1*10,1*10))
-                        pygame.display.update()
+
                         
                     print("");
             
