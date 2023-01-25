@@ -1,3 +1,4 @@
+#Now displaying in 3d, functions returning soon!
 import os
 import math
 import pygame
@@ -16,9 +17,9 @@ isopen = True
 stock = "SheetMetal"
 
 data = {}
-data[0]=5#60
-data[1]=5#60
-data[2]=5 #40
+data[0]=15#60
+data[1]=15#60
+data[2]=15 #40
 precision = 1
 material = {}
 material[0]="Aluminum"
@@ -303,15 +304,19 @@ pygame.init()
 Edge = (255,255,255)
 Corner = (255,0,0)
 Background = (64,244,208)
-display=pygame.display.set_mode((1500,750))
+width=1500
+height=750
+display=pygame.display.set_mode((width,height))
+pygame.display.set_caption("I humbly present JohnCAD")
 display.fill(Background)
+
 opfont= pygame.font.SysFont("candara",20)
 menu1 = opfont.render("Mill Operations M", 1, (0,0,0))
 menu2 = opfont.render("Lathe Operations L", 1, (0,0,0))
-menu5 = opfont.render("Drill Operatrions D", 1, (0,0,0))
-menu3 = opfont.render("Exporting", 1, (0,0,0))
-menu4 = opfont.render("Analysis", 1, (0,0,0))
-
+menu3 = opfont.render("Drill Operatrions D", 1, (0,0,0))
+menu4 = opfont.render("Exporting", 1, (0,0,0))
+menu5 = opfont.render("Analysis", 1, (0,0,0))
+#make menu an array for org
 
 
 shading=[155,155,155]
@@ -319,31 +324,49 @@ xshading=(shading[0]+10,shading[1],shading[2])
 yshading=(shading[0],shading[1]+10,shading[2])
 zshading=(shading[0],shading[1],shading[2]+10)
 
+
+orgin=(width/2,height-height/2)
+
+
 print(pygame.font.get_fonts())
 while (isopen==1):
-    pygame.display.set_caption("I humbly present JohnCAD")
     display.fill(Background)
+
+
+
+
+    
     displayscale=(750/boundaryY)/2
     display.blit(menu1,(10,10))
-    display.blit(menu2,(300,10))
-    display.blit(menu3,(600,10))
-    display.blit(menu4,(900,10))
-    display.blit(menu5,(1200,10))
+    display.blit(menu2,(200,10))
+    display.blit(menu3,(400,10))
+    display.blit(menu4,(600,10))
+    display.blit(menu5,(800,10))
     scale = 10
+    #save time by skipping entire row once outermost voxel drawn
+
     for k in range(0, int(boundaryZ)*precision):
         for j in range(0, int(boundaryY)*precision):
             for i in range(0, int(boundaryX)*precision):
-                #pygame.draw.rect(display,Edge,((j-i)*scale+100,((i+j)/2-k)*scale+100,1*scale,1*scale))
-                dx=(j-i)*scale
-                dy=((i+j)/2-k)*scale
-                hy=math.sqrt(scale**2+scale**2)
-                pygame.draw.polygon(display, xshading, ((dx+100,dy+100),(dx+100,dy+scale+100),(dx+math.cos(math.cos(30))*hy+100, dy+math.sin(math.cos(30))*hy+scale+100),(dx+math.cos(math.cos(30))*hy+100, dy+math.sin(math.cos(30))*hy+100)))
-                pygame.draw.polygon(display, yshading, ((dx+100,dy+100),(dx+100,dy+scale+100),(dx+-1*math.cos(math.cos(30))*hy+100, dy+math.sin(math.cos(30))*hy+scale+100),(dx+-1*math.cos(math.cos(30))*hy+100, dy+math.sin(math.cos(30))*hy+100)))
-                pygame.draw.polygon(display, zshading, ((dx+100,dy+scale+100),(dx+-1*math.cos(math.cos(30))*hy+100, dy+math.sin(math.cos(30))*hy+100),(dx+100,dy+hy+100),(dx+math.cos(math.cos(30))*hy+100, dy+math.sin(math.cos(30))*hy+100)))
-                #print(dx+100,dy+100)
-                #print(dx+100,dy+scale+100)
-                #print(dx+math.cos(30)*hy+100, dy+math.sin(30)*hy+100)
-                #print(dx+math.cos(30)*hy+100, dy+math.sin(30)*hy+scale+100)
+                if space[int(k*(boundaryX*boundaryY*precision)+j*(boundaryX*precision))+i] == u"\u25A0": 
+                    #pygame.draw.rect(display,Edge,((j-i)*scale+100,((i+j)/2-k)*scale+100,1*scale,1*scale))
+                    dx=(j-i)*scale+orgin[0]
+                    dy=((i+j)/2-k)*scale+orgin[1]
+                    hy=math.sqrt(scale**2+scale**2)
+                    pygame.draw.circle(display, (255,0,0), (dx,dy), 2)
+                    pygame.draw.polygon(display, xshading, ((dx,dy),(dx,dy-hy),(dx+math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy-hy),(dx+math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy))) #X+
+                    pygame.draw.polygon(display, yshading, ((dx,dy-hy),(dx,dy),(dx-math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy),(dx-math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy-hy))) #Y+
+                    #pygame.draw.polygon(display, zshading, ((dx,dy),(dx-math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy),(dx,dy-hy),(dx+math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy))) #Z-
+                    pygame.draw.polygon(display, zshading, ((dx,dy-hy),(dx-math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy-hy),(dx,dy-hy-hy),(dx+math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy-hy))) #Z+
+                    #print(dx+100,dy+100)
+                    #print(dx+100,dy+scale+100)
+                    #print(dx+math.cos(30)*hy+100, dy+math.sin(30)*hy+100)
+                    #print(dx+math.cos(30)*hy+100, dy+math.sin(30)*hy+scale+100)
+
+    pygame.draw.circle(display, (255,0,0), (orgin), 2)
+    pygame.draw.line(display, (255,0,0), (orgin), (orgin[0]+math.cos(math.degrees(30))*(boundaryX*scale),orgin[1]-math.sin(math.degrees(30))*(boundaryX*scale))  )
+    pygame.draw.line(display, (0,255,0), (orgin), (orgin[0]-math.cos(math.degrees(30))*(boundaryY*scale),orgin[1]-math.sin(math.degrees(30))*(boundaryY*scale))  )
+    pygame.draw.line(display, (0,0,100), (orgin), (orgin[0],orgin[1]-boundaryZ*scale))
     pygame.display.update()
 
 
