@@ -10,22 +10,15 @@ import Simple #Simple often repeated functions
 
 isopen = True
 
-#Pygame window
-pygame.init()
-wireframedisplayX=1500
-wireframedisplayY=750
-#Drawing
-Edge = (255,255,255)
-Corner = (255,0,0)
-Background = (0,0,255)
+
 
 #These variables are in two different, files, they are temp/default
 stock = "SheetMetal"
 
 data = {}
-data[2]=5
-data[1]=10
-data[0]=10
+data[0]=5#60
+data[1]=5#60
+data[2]=5 #40
 precision = 1
 material = {}
 material[0]="Aluminum"
@@ -35,7 +28,7 @@ material[1]=2700
 space = {}
 #Space for temperature data
 spacetemp = {};
-spacek = {};
+ospacetemp = {};
 #Thermal Analysis
 thermalsetup = {};
 thermalsetup[0]=0;
@@ -230,7 +223,7 @@ def generate():
 
 
     genWindow.title("JohnCAD Stock Generation")
-    genWindow.geometry("350x250")
+    genWindow.geometry("550x250")
             
     tk.Label(genWindow, text="Stock Type:").grid(row=0, column=0)
     tk.Radiobutton(genWindow, text="Sheet Metal ", command = sm, variable = 0, value = 0).grid(row=1, column=0)
@@ -242,9 +235,16 @@ def generate():
     tk.Radiobutton(genWindow, text="1/10 mm", command = p2, variable = 1, value = 1).grid(row=2, column=1)
     tk.Radiobutton(genWindow, text="1/100 mm     ", command = p3, variable = 1, value = 2).grid(row=3, column=1)
 
-    tk.Label(genWindow, text="Data Storage (Coming soon):").grid(row=0, column=2)
-    tk.Radiobutton(genWindow, text="RAM (Faster)", command = p1, variable = 2, value = 0).grid(row=1, column=2)
-    tk.Radiobutton(genWindow, text="Disk (For larger files)", command = p2, variable = 2, value = 1).grid(row=2, column=2)
+    tk.Label(genWindow, text="Material:").grid(row=0, column=2)
+    tk.Radiobutton(genWindow, text="Steel", command = p1, variable = 2, value = 0).grid(row=1, column=2)
+    tk.Radiobutton(genWindow, text="Aluminum", command = p2, variable = 2, value = 1).grid(row=2, column=2)
+    tk.Radiobutton(genWindow, text="Copper", command = p2, variable = 2, value = 2).grid(row=3, column=2)
+    tk.Radiobutton(genWindow, text="Custom", command = p2, variable = 2, value = 3).grid(row=4, column=2)
+    tk.Radiobutton(genWindow, text="None/Other", command = p2, variable = 2, value = 4).grid(row=5, column=2)
+
+    tk.Label(genWindow, text="Data Storage (Coming soon):").grid(row=0, column=3)
+    tk.Radiobutton(genWindow, text="RAM (Faster)", command = p1, variable = 3, value = 0).grid(row=1, column=3)
+    tk.Radiobutton(genWindow, text="Disk (For larger files)", command = p2, variable = 3, value = 1).grid(row=2, column=3)
 
     tk.Button(genWindow, text="Generate!", command = gen).grid(row=8, column=0)
     genWindow.mainloop()
@@ -273,11 +273,8 @@ def points():
     export.write('\n');
 
 
-def displaysetup():
-    wireframedisplay=pygame.display.set_mode((wireframedisplayX,wireframedisplayY))
-    pygame.display.set_caption("JohnCAD")
-    wireframedisplay.fill(Background)
-    displayscale=(750/boundaryY)/2
+
+
 
 
 
@@ -290,17 +287,70 @@ print(stock)
 print(mode)
 
 #reminder to move this back down to thermal
-restingtemp=0
+roomtemp=20
 for k in range (-1, int(boundaryZ+1)):
     for j in range (0, int(boundaryY)):
         for i in range (0, int(boundaryX)):
-            spacetemp[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=restingtemp
-            spacetemp[0]=100
+            spacetemp[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=roomtemp
 
 
 
+#move this to top when done with ui
+#Pygame window
+pygame.init()
 
+#Drawing
+Edge = (255,255,255)
+Corner = (255,0,0)
+Background = (64,244,208)
+display=pygame.display.set_mode((1500,750))
+display.fill(Background)
+opfont= pygame.font.SysFont("candara",20)
+menu1 = opfont.render("Mill Operations M", 1, (0,0,0))
+menu2 = opfont.render("Lathe Operations L", 1, (0,0,0))
+menu5 = opfont.render("Drill Operatrions D", 1, (0,0,0))
+menu3 = opfont.render("Exporting", 1, (0,0,0))
+menu4 = opfont.render("Analysis", 1, (0,0,0))
+
+
+
+shading=[155,155,155]
+xshading=(shading[0]+10,shading[1],shading[2])
+yshading=(shading[0],shading[1]+10,shading[2])
+zshading=(shading[0],shading[1],shading[2]+10)
+
+print(pygame.font.get_fonts())
 while (isopen==1):
+    pygame.display.set_caption("I humbly present JohnCAD")
+    display.fill(Background)
+    displayscale=(750/boundaryY)/2
+    display.blit(menu1,(10,10))
+    display.blit(menu2,(300,10))
+    display.blit(menu3,(600,10))
+    display.blit(menu4,(900,10))
+    display.blit(menu5,(1200,10))
+    scale = 10
+    for k in range(0, int(boundaryZ)*precision):
+        for j in range(0, int(boundaryY)*precision):
+            for i in range(0, int(boundaryX)*precision):
+                #pygame.draw.rect(display,Edge,((j-i)*scale+100,((i+j)/2-k)*scale+100,1*scale,1*scale))
+                dx=(j-i)*scale
+                dy=((i+j)/2-k)*scale
+                hy=math.sqrt(scale**2+scale**2)
+                pygame.draw.polygon(display, xshading, ((dx+100,dy+100),(dx+100,dy+scale+100),(dx+math.cos(math.cos(30))*hy+100, dy+math.sin(math.cos(30))*hy+scale+100),(dx+math.cos(math.cos(30))*hy+100, dy+math.sin(math.cos(30))*hy+100)))
+                pygame.draw.polygon(display, yshading, ((dx+100,dy+100),(dx+100,dy+scale+100),(dx+-1*math.cos(math.cos(30))*hy+100, dy+math.sin(math.cos(30))*hy+scale+100),(dx+-1*math.cos(math.cos(30))*hy+100, dy+math.sin(math.cos(30))*hy+100)))
+                pygame.draw.polygon(display, zshading, ((dx+100,dy+scale+100),(dx+-1*math.cos(math.cos(30))*hy+100, dy+math.sin(math.cos(30))*hy+100),(dx+100,dy+hy+100),(dx+math.cos(math.cos(30))*hy+100, dy+math.sin(math.cos(30))*hy+100)))
+                #print(dx+100,dy+100)
+                #print(dx+100,dy+scale+100)
+                #print(dx+math.cos(30)*hy+100, dy+math.sin(30)*hy+100)
+                #print(dx+math.cos(30)*hy+100, dy+math.sin(30)*hy+scale+100)
+    pygame.display.update()
+
+
+
+
+
+
 
 
     if (mode=="StockOperations"):
@@ -319,14 +369,6 @@ while (isopen==1):
 
         #Display
         if (command == "D" or command == "d"):
-
-
-            #Window Output
-            wireframedisplay=pygame.display.set_mode((wireframedisplayX,wireframedisplayY))
-            pygame.display.set_caption("Face Wireframes")
-            wireframedisplay.fill(Background)
-            displayscale=(750/boundaryY)/2
-
             for k in range(0, int(boundaryZ)*precision):
                 for j in range(0, int(boundaryY)*precision):
                     for i in range(0, int(boundaryX)*precision):
@@ -340,7 +382,6 @@ while (isopen==1):
                     for i in range(0, int(boundaryX)*precision):
                         if space[int(k*(boundaryX*boundaryY*precision)+j*(boundaryX*precision))+i] == u"\u25A0":
                             top[int(k*(boundaryX*precision))+i] = u"\u25A0"
-                            pygame.draw.rect(wireframedisplay,Edge,(i*displayscale,j*displayscale,1*displayscale,1*displayscale))
                         if top[int(k*(boundaryX*precision))+i] != u"\u25A0" and space[int(k*(boundaryX*boundaryY*precision)+j*(boundaryX*precision))+i] == u"\u25A1":
                             top[int(k*(boundaryX*precision))+i] = u"\u25A1"
                             
@@ -372,7 +413,7 @@ while (isopen==1):
                             right[int(k*(boundaryX*precision))+j] = u"\u25A1"
 
                             
-            pygame.display.update()
+
                         
         #Full Layered Display
         if (command == "H" or command == "h"):
@@ -679,6 +720,7 @@ while (isopen==1):
         #temp defaults
         alphasymbolthing = .0000177
         thermalstep = .01
+        thermaltime = 100/ thermalstep
         dxyz=.001/precision
         
 
@@ -706,17 +748,47 @@ while (isopen==1):
 
         if (command == "S" or command == "s"):
 
-            for t in range (0, int(5)):
+            for t in range (0, int(20)):
+                
+                for k in range (-1, int(boundaryZ)+1):
+                    for j in range (0,int(boundaryY)):
+                        for i in range (0, int(boundaryX)):
+                            ospacetemp[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=spacetemp[k*(boundaryY*boundaryX)+j*(boundaryX)+i]
+
+                            
                 for k in range (0, int(boundaryZ)):
                     for j in range (0,int(boundaryY)):
                         for i in range (0, int(boundaryX)):
+                            #Temperture of own space, and surrounding spaces
                             ot=spacetemp[k*(boundaryY*boundaryX)+j*(boundaryX)+i]
-                            lt=spacetemp[k*(boundaryY*boundaryX)+j*(boundaryX)+i-1]
-                            rt=spacetemp[k*(boundaryY*boundaryX)+j*(boundaryX)+i+1]
-                            dt=spacetemp[k*(boundaryY*boundaryX)+(j-1)*(boundaryX)+i]
-                            tt=spacetemp[k*(boundaryY*boundaryX)+(j+1)*(boundaryX)+i]
+                            lt=ospacetemp[k*(boundaryY*boundaryX)+j*(boundaryX)+i-1]
+                            rt=ospacetemp[k*(boundaryY*boundaryX)+j*(boundaryX)+i+1]
+                            dt=ospacetemp[k*(boundaryY*boundaryX)+(j-1)*(boundaryX)+i]
+                            tt=ospacetemp[k*(boundaryY*boundaryX)+(j+1)*(boundaryX)+i]
+                            bt=ospacetemp[(k-1)*(boundaryY*boundaryX)+j*(boundaryX)+i]
+                            ft=ospacetemp[(k-1)*(boundaryY*boundaryX)+j*(boundaryX)+i]
+
+                            if spacetemp[i==0]:
+                                lt=roomtemp
+                            if spacetemp[i==boundaryX]:
+                                rt=roomtemp
+                            if spacetemp[j==0]:
+                                dt=roomtemp
+                            if spacetemp[j==boundaryY]:
+                                tt=400
+                            if spacetemp[k==0]:
+                                bt=roomtemp
+                            if spacetemp[k==boundaryZ]:
+                                ft=roomtemp
                             #This part was not my work
-                            spacetemp[k*(boundaryY*boundaryX)+j*(boundaryX)+i] = ot + alphasymbolthing*thermalstep*(      (((lt-ot)/(dxyz)-(rt-ot)/(dxyz))/dxyz)+(((dt-ot)/(dxyz)-(tt-ot)/(dxyz))/dxyz)              )
+                            if k*(boundaryY*boundaryX)+j*(boundaryX)+i == 0:
+                                print(ot)
+                                print(alphasymbolthing)
+                                print(thermalstep)
+                                print(rt)
+                                print(tt)
+                            if space[k*(boundaryY*boundaryX)+j*(boundaryX)+i]==u"\u25A0":
+                                spacetemp[k*(boundaryY*boundaryX)+j*(boundaryX)+i] = ot + alphasymbolthing*thermalstep*(      (((rt-ot)/(dxyz)-(lt-ot)/(dxyz))/dxyz)+(((dt-ot)/(dxyz)-(tt-ot)/(dxyz))/dxyz) +(((bt-ot)/(dxyz)-(ft-ot)/(dxyz))/dxyz)              )
             
         if (command == "H" or command == "h"):
             wireframedisplay=pygame.display.set_mode((wireframedisplayX,wireframedisplayY))
@@ -727,11 +799,11 @@ while (isopen==1):
                 print("Layer ", k+1);
                 for j in range(0, int(boundaryY)):
                     for i in range(0, int(boundaryX)):
-                        color = ( abs(int(spacetemp[   int(0*(boundaryX*boundaryY)+j*(boundaryX))+i     ])/100*255),0,0)
-                        
+                        print(spacetemp[   int(k*(boundaryX*boundaryY)+(j)*(boundaryX))+i     ], "" ,end = ""); #boundaryY-1- before j to swap y axis
+                        color = ( abs(int(spacetemp[   int(0*(boundaryX*boundaryY)+j*(boundaryX))+i     ])/500*255),0,0)
                         pygame.draw.rect(wireframedisplay,color,(i*10,j*10,1*10,1*10))
                         pygame.display.update()
-                        print(spacetemp[   int(k*(boundaryX*boundaryY)+(boundaryY-1-j)*(boundaryX))+i     ], "" ,end = ""); #boundaryY-1- before j to swap y axis
+                        
                     print("");
             
                     
