@@ -356,29 +356,32 @@ for t in range (0, int(50)):
             for i in range (0, int(boundaryX)):
                 #Temperture of own space, and surrounding spaces
                 ot=spacetemp[k*(boundaryY*boundaryX)+j*(boundaryX)+i]
-                lt=ospacetemp[k*(boundaryY*boundaryX)+j*(boundaryX)+i-1]
-                rt=ospacetemp[k*(boundaryY*boundaryX)+j*(boundaryX)+i+1]
-                dt=ospacetemp[k*(boundaryY*boundaryX)+(j-1)*(boundaryX)+i]
-                tt=ospacetemp[k*(boundaryY*boundaryX)+(j+1)*(boundaryX)+i]
-                bt=ospacetemp[(k-1)*(boundaryY*boundaryX)+j*(boundaryX)+i]
-                ft=ospacetemp[(k+1)*(boundaryY*boundaryX)+j*(boundaryX)+i]
+                xn=ospacetemp[k*(boundaryY*boundaryX)+j*(boundaryX)+i-1]
+                xp=ospacetemp[k*(boundaryY*boundaryX)+j*(boundaryX)+i+1]
+                yn=ospacetemp[k*(boundaryY*boundaryX)+(j-1)*(boundaryX)+i]
+                yp=ospacetemp[k*(boundaryY*boundaryX)+(j+1)*(boundaryX)+i]
+                zn=ospacetemp[(k-1)*(boundaryY*boundaryX)+j*(boundaryX)+i]
+                zp=ospacetemp[(k+1)*(boundaryY*boundaryX)+j*(boundaryX)+i]
 
                 if i==0:
-                    lt=roomtemp
+                    xn=roomtemp
                 if i==boundaryX:
-                    rt=roomtemp
+                    xp=roomtemp
                 if j==0:
-                    dt=roomtemp
+                    yn=roomtemp
                 if j==boundaryY:
-                    tt=roomtemp
+                    yp=roomtemp
                 if k==0:
                     bt=400
-                    
                 if k==boundaryZ:
                     ft=roomtemp
+                if zp > zn:
+                    inter = zp
+                    zp = zn
+                    zn = inter
                             #This part was not my work
                 if space[k*(boundaryY*boundaryX)+j*(boundaryX)+i]==u"\u25A0":
-                    spacetemp[k*(boundaryY*boundaryX)+j*(boundaryX)+i] = ot + alphasymbolthing*thermalstep*(      (((ft-ot)/(dxyz)-(bt-ot)/(dxyz))/dxyz)          )
+                    spacetemp[k*(boundaryY*boundaryX)+j*(boundaryX)+i] = ot + alphasymbolthing*thermalstep*(      (((zp-ot)/(dxyz)-(zn-ot)/(dxyz))/dxyz)          )
                     if spacetemp[k*(boundaryY*boundaryX)+j*(boundaryX)+i] >= maxtemp:
                         maxtemp = spacetemp[k*(boundaryY*boundaryX)+j*(boundaryX)+i]
                     if spacetemp[k*(boundaryY*boundaryX)+j*(boundaryX)+i] < 0:
@@ -1188,6 +1191,4 @@ while (isopen==True):
                         print(spacetemp[   int(k*(boundaryX*boundaryY)+(j)*(boundaryX))+i     ], "" ,end = ""); #boundaryY-1- before j to swap y axis
 
                         
-                    print("");
-            
-                    
+                    print("")
