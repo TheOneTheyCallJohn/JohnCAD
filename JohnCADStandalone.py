@@ -11,9 +11,9 @@ isopen = True
 stock = "SheetMetal"
 
 data = {}
-data[0]=15#60
-data[1]=15#60
-data[2]=15 #40
+data[0]=5#60
+data[1]=5#60
+data[2]=5 #40
 precision = 1
 material = {}
 material[0]="Aluminum"
@@ -168,9 +168,9 @@ def generate():
         #RoundStockGeneration
         if (stock== "RoundStock"):
             print('test')
-            boundaryX=data[0]
-            boundaryY=data[1]
-            boundaryZ=data[2]
+            boundaryX=data[0]*precision
+            boundaryY=data[1]*precision
+            boundaryZ=data[2]*precision
             print("Diameter, Length");
             print(data[0], 'mm' ,data[1], 'mm');
             for k in range (-1, 0):
@@ -200,9 +200,9 @@ def generate():
             mode="StockOperations"
         #Barstock deatils   
         if (stock=="BarStock"):
-            boundaryX=data[0]
-            boundaryY=data[1]
-            boundaryZ=data[2]
+            boundaryX=data[0]*precision
+            boundaryY=data[1]*precision
+            boundaryZ=data[2]*precision
             mode = "StockOperations"
             for k in range (-1, 0):
                 for j in range (0, int(boundaryY)):
@@ -305,14 +305,15 @@ Background = (64,244,208)
 MenuRGB = (229,228,228)
 width=1500
 height=750
+scale = 10
 mdisplay=pygame.display.set_mode((width,height))
 pygame.display.set_caption("I humbly present JohnCAD")
 mdisplay.fill(Background)
 
 opfont= pygame.font.SysFont("candara",20)
-menu1 = opfont.render("Mill Operations M", 1, (0,0,0))
-menu2 = opfont.render("Lathe Operations L", 1, (0,0,0))
-menu3 = opfont.render("Drill Operations D", 1, (0,0,0))
+menu1 = opfont.render("Mill Operations", 1, (0,0,0))
+menu2 = opfont.render("Lathe Operations", 1, (0,0,0))
+menu3 = opfont.render("Drill Operations", 1, (0,0,0))
 menu4 = opfont.render("Exporting", 1, (0,0,0))
 menu5 = opfont.render("Analysis", 1, (0,0,0))
 #make menu an array for org
@@ -321,7 +322,7 @@ menu5 = opfont.render("Analysis", 1, (0,0,0))
 
 
 
-orgin=(width/2,height-height/2)
+orgin=[width/2,height-height/2]
 
 
 
@@ -346,18 +347,39 @@ while (isopen==True):
                 operation[0] = "Drill"
             if event.key == pygame.K_e:
                 operation[0] = "Export"
+            if event.key == pygame.K_z:
+                operation[0] = 0
             if event.key == pygame.K_RIGHT:
-                orgin[0]=10
+                orgin[0]=orgin[0]+50
             if event.key == pygame.K_LEFT:
-                orgin[0]=orgin[0]-1
+                orgin[0]=orgin[0]-50
             if event.key == pygame.K_UP:
-                orgin[0]=10
+                orgin[1]=orgin[1]-50
             if event.key == pygame.K_DOWN:
-                orgin[0]=orgin[0]-1
+                orgin[1]=orgin[1]+50
+            if event.key == pygame.K_p:
+                scale = scale +1
+            if event.key == pygame.K_o and scale > 0:
+                scale = scale -1
 
+                
+    pygame.draw.rect(mdisplay, MenuRGB,((0,0), (width,100)))
+    mdisplay.blit(menu1,(10,10))
+    mdisplay.blit(menu2,(200,10))
+    mdisplay.blit(menu3,(400,10))
+    mdisplay.blit(menu4,(600,10))
+    mdisplay.blit(menu5,(800,10))
     #Backgrounds to text and sidebar
+    if operation[0] == 0:
+        pygame.draw.rect(mdisplay, (0,0,0),((30,30), (30,30)))
+        pygame.draw.rect(mdisplay, (0,0,0),((230,30), (30,30)))
+        pygame.draw.rect(mdisplay, (0,0,0),((430,30), (30,30)))
+        pygame.draw.rect(mdisplay, (0,0,0),((630,30), (30,30)))
+        pygame.draw.rect(mdisplay, (0,0,0),((830,30), (30,30)))
+        
     if operation[0] != 0:
-        pygame.draw.rect(mdisplay, MenuRGB,((0,100), (200,height-100))) 
+        pygame.draw.rect(mdisplay, MenuRGB,((0,100), (200,height-100)))
+        pygame.draw.rect(mdisplay,(0,0,0),((30,550), (30,30)))
     if operation[0] == "Mill":
         pygame.draw.rect(mdisplay, (255,255,255),(0,0), width=10,height=10)
     #if operation[0] == "Export":
@@ -367,15 +389,10 @@ while (isopen==True):
             
         
     displayscale=(750/boundaryY)/2
-    scale = 10
+    
 
 
-    pygame.draw.rect(mdisplay, MenuRGB,((0,0), (width,100)))
-    mdisplay.blit(menu1,(10,10))
-    mdisplay.blit(menu2,(200,10))
-    mdisplay.blit(menu3,(400,10))
-    mdisplay.blit(menu4,(600,10))
-    mdisplay.blit(menu5,(800,10))
+
     
     #save time by skipping entire row once outermost voxel drawn
 
@@ -410,11 +427,13 @@ while (isopen==True):
                     dx=(j-i)*scale+orgin[0]
                     dy=((i+j)/2-k)*scale+orgin[1]
                     hy=math.sqrt(scale**2+scale**2)
-                    
-                    pygame.draw.polygon(mdisplay, xshading, ((dx,dy+hy),(dx,dy),(dx+math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy),(dx+math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy+hy))) #X+
-                    pygame.draw.polygon(mdisplay, yshading, ((dx,dy),(dx,dy+hy),(dx-math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy+hy),(dx-math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy))) #Y+
+                    if i == boundaryX-1 or space[int(k*(boundaryX*boundaryY)+j*(boundaryX))+i+1 == u"\u25A0"]:
+                        pygame.draw.polygon(mdisplay, xshading, ((dx,dy+hy),(dx,dy),(dx+math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy),(dx+math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy+hy))) #X+
+                    if j == boundaryY-1 or space[int(k*(boundaryX*boundaryY)+(j+1)*(boundaryX))+i == u"\u25A0"]:
+                        pygame.draw.polygon(mdisplay, yshading, ((dx,dy),(dx,dy+hy),(dx-math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy+hy),(dx-math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy))) #Y+
                     #pygame.draw.polygon(display, zshading, ((dx,dy),(dx-math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy),(dx,dy-hy),(dx+math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy))) #Z-
-                    pygame.draw.polygon(mdisplay, zshading, ((dx,dy),(dx-math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy),(dx,dy-math.cos(math.degrees(60))*scale*2),(dx+math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy))) #Z+
+                    if k == boundaryZ-1 or space[int((k+1)*(boundaryX*boundaryY)+j*(boundaryX))+i == u"\u25A0"]:
+                        pygame.draw.polygon(mdisplay, zshading, ((dx,dy),(dx-math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy),(dx,dy-math.cos(math.degrees(60))*scale*2),(dx+math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy))) #Z+
                     
     #for k in range(0, int(boundaryZ)*precision):
         #for j in range(0, int(boundaryY)*precision):
