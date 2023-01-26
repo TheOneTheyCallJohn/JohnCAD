@@ -1,3 +1,4 @@
+#until fuctions return, I have created a showcase heatsink, maybe dont take the results to heart yet.
 import os
 import math
 import pygame
@@ -11,9 +12,9 @@ isopen = True
 stock = "SheetMetal"
 
 data = {}
-data[0]=5#60
-data[1]=5#60
-data[2]=5 #40
+data[0]=55#60
+data[1]=55#60
+data[2]=40 #40
 precision = 1
 material = {}
 material[0]="Aluminum"
@@ -40,10 +41,6 @@ lathe = {}
 mill = {}
 drill = {}
 
-top = {}
-front = {}
-right = {}
-#Export
 header = "solid MadeWithJohnCAD"
 facetn = "facet normal 0 0 0"
 oloop = 'outer loop'
@@ -279,7 +276,7 @@ def points():
 
 
 generate()
-
+regenerate = True
 
 print(precision)
 print(stock)
@@ -328,12 +325,71 @@ orgin=[width/2,height-height/2]
 
 
 
+#Hard code mill and heat demo
+for k in range (10, int(boundaryZ)):
+    for j in range (0,int(boundaryY)):
+        for i in range (0, int(boundaryX)):
+            if j >= 0 and j <= 5:
+                space[(k)*(boundaryX*boundaryY)+(j)*(boundaryY)+i]=u"\u25A1";
+            if j >= 10 and j <= 15:
+                space[(k)*(boundaryX*boundaryY)+(j)*(boundaryY)+i]=u"\u25A1";
+            if j >= 20 and j <= 25:
+                space[(k)*(boundaryX*boundaryY)+(j)*(boundaryY)+i]=u"\u25A1";
+            if j >= 30 and j <= 35:
+                space[(k)*(boundaryX*boundaryY)+(j)*(boundaryY)+i]=u"\u25A1";
+            if j >= 40 and j <= 45:
+                space[(k)*(boundaryX*boundaryY)+(j)*(boundaryY)+i]=u"\u25A1";
+            if j >= 50 and j <= 55:
+                space[(k)*(boundaryX*boundaryY)+(j)*(boundaryY)+i]=u"\u25A1";
+alphasymbolthing = .0000177
+thermalstep = .01
+thermaltime = 100/ thermalstep
+dxyz=.001/precision
+maxtemp = 400
+for t in range (0, int(50)):
+    for k in range (-1, int(boundaryZ)+1):
+        for j in range (0,int(boundaryY)):
+            for i in range (0, int(boundaryX)):
+                ospacetemp[k*(boundaryY*boundaryX)+j*(boundaryX)+i]=spacetemp[k*(boundaryY*boundaryX)+j*(boundaryX)+i]            
+    for k in range (0, int(boundaryZ)):
+        for j in range (0,int(boundaryY)):
+            for i in range (0, int(boundaryX)):
+                #Temperture of own space, and surrounding spaces
+                ot=spacetemp[k*(boundaryY*boundaryX)+j*(boundaryX)+i]
+                lt=ospacetemp[k*(boundaryY*boundaryX)+j*(boundaryX)+i-1]
+                rt=ospacetemp[k*(boundaryY*boundaryX)+j*(boundaryX)+i+1]
+                dt=ospacetemp[k*(boundaryY*boundaryX)+(j-1)*(boundaryX)+i]
+                tt=ospacetemp[k*(boundaryY*boundaryX)+(j+1)*(boundaryX)+i]
+                bt=ospacetemp[(k-1)*(boundaryY*boundaryX)+j*(boundaryX)+i]
+                ft=ospacetemp[(k+1)*(boundaryY*boundaryX)+j*(boundaryX)+i]
 
-
+                if i==0:
+                    lt=roomtemp
+                if i==boundaryX:
+                    rt=roomtemp
+                if j==0:
+                    dt=roomtemp
+                if j==boundaryY:
+                    tt=roomtemp
+                if k==0:
+                    bt=400
+                    
+                if k==boundaryZ:
+                    ft=roomtemp
+                            #This part was not my work
+                if space[k*(boundaryY*boundaryX)+j*(boundaryX)+i]==u"\u25A0":
+                    spacetemp[k*(boundaryY*boundaryX)+j*(boundaryX)+i] = ot + alphasymbolthing*thermalstep*(      (((ft-ot)/(dxyz)-(bt-ot)/(dxyz))/dxyz)          )
+                    if spacetemp[k*(boundaryY*boundaryX)+j*(boundaryX)+i] >= maxtemp:
+                        maxtemp = spacetemp[k*(boundaryY*boundaryX)+j*(boundaryX)+i]
+                    if spacetemp[k*(boundaryY*boundaryX)+j*(boundaryX)+i] < 0:
+                        spacetemp[k*(boundaryY*boundaryX)+j*(boundaryX)+i] = 0
+                    #if spacetemp[k*(boundaryY*boundaryX)+j*(boundaryX)+i] > 400:
+                    #    spacetemp[k*(boundaryY*boundaryX)+j*(boundaryX)+i] = 400
+print()                    
+                   
 #print(pygame.font.get_fonts())
 while (isopen==True):
-    mdisplay.fill(0)
-    mdisplay.fill(Background) 
+     
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             isopen = False
@@ -351,90 +407,87 @@ while (isopen==True):
                 operation[0] = 0
             if event.key == pygame.K_RIGHT:
                 orgin[0]=orgin[0]+50
+                regenerate = True
             if event.key == pygame.K_LEFT:
                 orgin[0]=orgin[0]-50
+                regenerate = True
             if event.key == pygame.K_UP:
                 orgin[1]=orgin[1]-50
+                regenerate = True
             if event.key == pygame.K_DOWN:
                 orgin[1]=orgin[1]+50
+                regenerate = True
             if event.key == pygame.K_p:
                 scale = scale +1
+                regenerate = True
             if event.key == pygame.K_o and scale > 0:
                 scale = scale -1
-
-                
-    pygame.draw.rect(mdisplay, MenuRGB,((0,0), (width,100)))
-    mdisplay.blit(menu1,(10,10))
-    mdisplay.blit(menu2,(200,10))
-    mdisplay.blit(menu3,(400,10))
-    mdisplay.blit(menu4,(600,10))
-    mdisplay.blit(menu5,(800,10))
-    #Backgrounds to text and sidebar
-    if operation[0] == 0:
-        pygame.draw.rect(mdisplay, (0,0,0),((30,30), (30,30)))
-        pygame.draw.rect(mdisplay, (0,0,0),((230,30), (30,30)))
-        pygame.draw.rect(mdisplay, (0,0,0),((430,30), (30,30)))
-        pygame.draw.rect(mdisplay, (0,0,0),((630,30), (30,30)))
-        pygame.draw.rect(mdisplay, (0,0,0),((830,30), (30,30)))
-        
-    if operation[0] != 0:
-        pygame.draw.rect(mdisplay, MenuRGB,((0,100), (200,height-100)))
-        pygame.draw.rect(mdisplay,(0,0,0),((30,550), (30,30)))
-    if operation[0] == "Mill":
-        pygame.draw.rect(mdisplay, (255,255,255),(0,0), width=10,height=10)
-    #if operation[0] == "Export":
-
-    
-
-            
-        
-    displayscale=(750/boundaryY)/2
-    
-
-
-
-    
-    #save time by skipping entire row once outermost voxel drawn
-
+                regenerate = True
 
 
 #Color settings
-    displaymode = 0
+    displaymode = 1
+    spacetemp[int(39*(boundaryX*boundaryY)+(30)*(boundaryX))+30]=375
+    spacetemp[int(39*(boundaryX*boundaryY)+(30)*(boundaryX))+31]=290
     if displaymode == 0:
         shading=[55,55,55]
         xshading=(shading[0]+10,shading[1],shading[2])
         yshading=(shading[0],shading[1]+10,shading[2])
         zshading=(shading[0],shading[1],shading[2]+10)
 
+    while regenerate == True:
+        mdisplay.fill(Background)            
+        pygame.draw.rect(mdisplay, MenuRGB,((0,0), (width,100)))
+        mdisplay.blit(menu1,(10,10))
+        mdisplay.blit(menu2,(200,10))
+        mdisplay.blit(menu3,(400,10))
+        mdisplay.blit(menu4,(600,10))
+        mdisplay.blit(menu5,(800,10))
+        #Backgrounds to text and sidebar
+        if operation[0] == 0:
+            pygame.draw.rect(mdisplay, (0,0,0),((30,30), (30,30)))
+            pygame.draw.rect(mdisplay, (0,0,0),((230,30), (30,30)))
+            pygame.draw.rect(mdisplay, (0,0,0),((430,30), (30,30)))
+            pygame.draw.rect(mdisplay, (0,0,0),((630,30), (30,30)))
+            pygame.draw.rect(mdisplay, (0,0,0),((830,30), (30,30)))
+            
+        if operation[0] != 0:
+            pygame.draw.rect(mdisplay, MenuRGB,((0,100), (200,height-100)))
+            pygame.draw.rect(mdisplay,(0,0,0),((30,550), (30,30)))
+        if operation[0] == "Mill":
+            pygame.draw.rect(mdisplay, (255,255,255),(0,0), width=10,height=10)
+        #if operation[0] == "Export":
 
-    for k in range(0, int(boundaryZ)*precision):
-        for j in range(0, int(boundaryY)*precision):
-            for i in range(0, int(boundaryX)*precision):
-                if space[int(k*(boundaryX*boundaryY*precision)+j*(boundaryX*precision))+i] == u"\u25A0":
-                    if displaymode == 1:
-                        if spacetemp[int(k*(boundaryX*boundaryY)+(j)*(boundaryX))+i] <= 400/2:
-                            xshading=(0+spacetemp[int(k*(boundaryX*boundaryY)+(j)*(boundaryX))+i]/200*255,255,0)
-                            #print(0+spacetemp[int(k*(boundaryX*boundaryY)+(j)*(boundaryX))+i]/200*255)
-                            yshading=xshading
-                            zshading=yshading
-                        if spacetemp[int(k*(boundaryX*boundaryY)+(j)*(boundaryX))+i] >= 400/2:
-                            xshading=(255,255-spacetemp[int(k*(boundaryX*boundaryY)+(j)*(boundaryX))+i]/200*255+255,0)
-                            #print(255-spacetemp[int(k*(boundaryX*boundaryY)+(j)*(boundaryX))+i]/200*255+255)
-                            yshading=xshading
-                            zshading=yshading
+        
+        for k in range(0, int(boundaryZ)):
+            for j in range(0, int(boundaryY)):
+                for i in range(0, int(boundaryX)):
+                    if space[int(k*(boundaryX*boundaryY)+j*(boundaryX))+i] == u"\u25A0":
+                        if displaymode == 1:
+                            if spacetemp[int(k*(boundaryX*boundaryY)+(j)*(boundaryX))+i] <= maxtemp/2:
+                                xshading=(0+spacetemp[int(k*(boundaryX*boundaryY)+(j)*(boundaryX))+i]/(maxtemp/2)*255,255,0)
+                                #print(0+spacetemp[int(k*(boundaryX*boundaryY)+(j)*(boundaryX))+i]/200*255)
+                                yshading=xshading
+                                zshading=yshading
+                            if spacetemp[int(k*(boundaryX*boundaryY)+(j)*(boundaryX))+i] >= maxtemp/2:
+                                xshading=(255,255-spacetemp[int(k*(boundaryX*boundaryY)+(j)*(boundaryX))+i]/(maxtemp/2)*255+255,0)
+                                #print(255-spacetemp[int(k*(boundaryX*boundaryY)+(j)*(boundaryX))+i]/200*255+255)
+                                yshading=xshading
+                                zshading=yshading
 
+                            
+                        dx=(j-i)*scale+orgin[0]
+                        dy=((i+j)/2-k)*scale+orgin[1]
+                        hy=math.sqrt(scale**2+scale**2)
+                        if i == boundaryX-1 or space[int(k*(boundaryX*boundaryY)+j*(boundaryX))+i+1 == u"\u25A0"]:
+                            pygame.draw.polygon(mdisplay, xshading, ((dx,dy+hy),(dx,dy),(dx+math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy),(dx+math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy+hy))) #X+
+                        if j == boundaryY-1 or space[int(k*(boundaryX*boundaryY)+(j+1)*(boundaryX))+i == u"\u25A0"]:
+                            pygame.draw.polygon(mdisplay, yshading, ((dx,dy),(dx,dy+hy),(dx-math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy+hy),(dx-math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy))) #Y+
+                        #pygame.draw.polygon(display, zshading, ((dx,dy),(dx-math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy),(dx,dy-hy),(dx+math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy))) #Z-
+                        if k == boundaryZ-1 or space[int((k+1)*(boundaryX*boundaryY)+j*(boundaryX))+i == u"\u25A0"]:
+                            pygame.draw.polygon(mdisplay, zshading, ((dx,dy),(dx-math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy),(dx,dy-math.cos(math.degrees(60))*scale*2),(dx+math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy))) #Z+
+        regenerate = False
                         
-                    dx=(j-i)*scale+orgin[0]
-                    dy=((i+j)/2-k)*scale+orgin[1]
-                    hy=math.sqrt(scale**2+scale**2)
-                    if i == boundaryX-1 or space[int(k*(boundaryX*boundaryY)+j*(boundaryX))+i+1 == u"\u25A0"]:
-                        pygame.draw.polygon(mdisplay, xshading, ((dx,dy+hy),(dx,dy),(dx+math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy),(dx+math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy+hy))) #X+
-                    if j == boundaryY-1 or space[int(k*(boundaryX*boundaryY)+(j+1)*(boundaryX))+i == u"\u25A0"]:
-                        pygame.draw.polygon(mdisplay, yshading, ((dx,dy),(dx,dy+hy),(dx-math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy+hy),(dx-math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy))) #Y+
-                    #pygame.draw.polygon(display, zshading, ((dx,dy),(dx-math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy),(dx,dy-hy),(dx+math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy))) #Z-
-                    if k == boundaryZ-1 or space[int((k+1)*(boundaryX*boundaryY)+j*(boundaryX))+i == u"\u25A0"]:
-                        pygame.draw.polygon(mdisplay, zshading, ((dx,dy),(dx-math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy),(dx,dy-math.cos(math.degrees(60))*scale*2),(dx+math.cos(math.degrees(30))*hy,dy+math.sin(math.degrees(30))*hy))) #Z+
-                    
     #for k in range(0, int(boundaryZ)*precision):
         #for j in range(0, int(boundaryY)*precision):
             #for i in range(0, int(boundaryX)*precision):
